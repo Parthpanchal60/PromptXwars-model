@@ -6,11 +6,44 @@ import { Gene, RoadmapCard, JudgeEvaluation } from '../types';
  */
 
 export const GOOGLE_CONFIG = {
+  geminiApiKey: (import.meta.env.VITE_GEMINI_API_KEY || import.meta.env.VITE_GOOGLE_API_KEY || import.meta.env.GOOGLE_API_KEY || '') as string,
   firebaseApiKey: (import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.FIREBASE_API_KEY || 'AIzaSyMockFirebaseKey9834kdL0927xLKMnz982') as string,
   sheetsApiKey: (import.meta.env.VITE_SHEETS_API_KEY || import.meta.env.SHEETS_API_KEY || 'AIzaSyMockSheetsKey11029348xLmQzP') as string,
   visionApiKey: (import.meta.env.VITE_VISION_API_KEY || import.meta.env.VISION_API_KEY || 'AIzaSyMockVisionKey98721345vTqR') as string,
   mapsApiKey: (import.meta.env.VITE_MAPS_API_KEY || import.meta.env.MAPS_API_KEY || 'AIzaSyDemoKeyForPrototypingAndDevelopment') as string,
 };
+
+/**
+ * Live Google Gemini 3.6 Flash Inference Adapter
+ */
+export async function generateGeminiMutationAdvice(projectName: string): Promise<string> {
+  const key = GOOGLE_CONFIG.geminiApiKey || GOOGLE_CONFIG.firebaseApiKey;
+  if (!key || key.startsWith('AIzaSyMock')) {
+    return `AI Genome Mentor Advice: Optimize ${projectName} with modular sub-components, WCAG AAA contrast (7:1), and strict input sanitization.`;
+  }
+
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        contents: [
+          {
+            parts: [
+              {
+                text: `Act as a Hackathon Principal Architect. In 2 concise bullet points, recommend architectural mutations for a project named "${projectName}".`
+              }
+            ]
+          }
+        ]
+      })
+    });
+    const data = await res.json();
+    return data.candidates?.[0]?.content?.parts?.[0]?.text || `AI Advice: Fortify ${projectName} architecture and maintain single branch discipline.`;
+  } catch {
+    return `AI Advice: Fortify ${projectName} architecture and maintain single branch discipline.`;
+  }
+}
 
 export interface VisionAnalysisResult {
   fileName: string;

@@ -3,7 +3,12 @@
  * Usage: node scripts/verify-keys.mjs [API_KEY]
  */
 
-const key = process.argv[2] || process.env.VITE_MAPS_API_KEY || process.env.MAPS_API_KEY;
+const key =
+  process.argv[2] ||
+  process.env.VITE_GEMINI_API_KEY ||
+  process.env.VITE_GOOGLE_API_KEY ||
+  process.env.GOOGLE_API_KEY ||
+  process.env.VITE_MAPS_API_KEY;
 
 if (!key) {
   console.log('\n❌ No API Key provided to test.');
@@ -11,9 +16,25 @@ if (!key) {
   process.exit(1);
 }
 
-console.log(`\n🔍 Testing Google Cloud API Key: ${key.slice(0, 8)}••••••••\n`);
+console.log(`\n🔍 Testing Google Cloud & Gemini API Key: ${key.slice(0, 8)}••••••••\n`);
 
 async function testServices() {
+  // 1. Test Google Gemini Generative Language API
+  try {
+    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${key}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ contents: [{ parts: [{ text: 'Ping' }] }] }),
+    });
+    const data = await res.json();
+    if (data.candidates && data.candidates.length > 0) {
+      console.log('🌟 Google Gemini 3.6 Flash API: ACTIVE & FULLY AUTHORIZED! (Live AI Inference Working)');
+    } else {
+      console.log(`⚠️ Google Gemini API: ${data.error?.message || 'Unauthorized'}`);
+    }
+  } catch (err) {
+    console.log('❌ Google Gemini API: Network failure', err.message);
+  }
   // 1. Test Google Maps Geocoding API
   try {
     const res = await fetch(`https://maps.googleapis.com/maps/api/geocode/json?address=San+Francisco&key=${key}`);
