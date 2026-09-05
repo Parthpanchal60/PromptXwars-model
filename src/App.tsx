@@ -51,8 +51,14 @@ import { EvolutionTimeline } from './components/EvolutionTimeline';
 import { EthicalAIPanel } from './components/EthicalAIPanel';
 import { VivaDefensePrep } from './components/VivaDefensePrep';
 import { ChatAssistant } from './components/ChatAssistant';
-import { GoogleServicesModal } from './components/GoogleServicesModal';
-import { SecurityPanel } from './components/SecurityPanel';
+
+// Lazy-loaded modal components for bundle optimization & tree-shaking
+const GoogleServicesModal = React.lazy(() =>
+  import('./components/GoogleServicesModal').then((m) => ({ default: m.GoogleServicesModal }))
+);
+const SecurityPanel = React.lazy(() =>
+  import('./components/SecurityPanel').then((m) => ({ default: m.SecurityPanel }))
+);
 
 /**
  * Initial Default Project Plan
@@ -704,21 +710,25 @@ export const App: React.FC = () => {
         currentPlan={projectPlan}
       />
 
-      {/* Google Cloud Services Modal */}
-      <GoogleServicesModal
-        isOpen={isGoogleModalOpen}
-        onClose={() => setIsGoogleModalOpen(false)}
-        genes={genes}
-        roadmap={roadmapCards}
-        judge={judgeEvaluation}
-        projectName={projectName}
-      />
-
-      {/* Security & Anti-XSS Sandbox Modal */}
-      <SecurityPanel
-        isOpen={isSecurityModalOpen}
-        onClose={() => setIsSecurityModalOpen(false)}
-      />
+      {/* Dynamic Lazy-Loaded Modals */}
+      <React.Suspense fallback={null}>
+        {isGoogleModalOpen && (
+          <GoogleServicesModal
+            isOpen={isGoogleModalOpen}
+            onClose={() => setIsGoogleModalOpen(false)}
+            genes={genes}
+            roadmap={roadmapCards}
+            judge={judgeEvaluation}
+            projectName={projectName}
+          />
+        )}
+        {isSecurityModalOpen && (
+          <SecurityPanel
+            isOpen={isSecurityModalOpen}
+            onClose={() => setIsSecurityModalOpen(false)}
+          />
+        )}
+      </React.Suspense>
     </div>
   );
 };
