@@ -6,9 +6,11 @@ export const EthicalAIPanel: React.FC = () => {
     <section
       className="glass-panel"
       style={{
-        padding: '20px 24px',
-        border: '1px solid rgba(0, 245, 212, 0.25)',
-        background: 'linear-gradient(135deg, rgba(7, 10, 19, 0.95) 0%, rgba(13, 19, 34, 0.9) 100%)',
+        padding: '24px',
+        border: '1px solid var(--border-subtle)',
+        background: 'var(--bg-card-glass)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
         display: 'flex',
         flexDirection: 'column',
         gap: 14,
@@ -22,13 +24,13 @@ export const EthicalAIPanel: React.FC = () => {
               width: 32,
               height: 32,
               borderRadius: 'var(--radius-sm)',
-              background: 'rgba(0, 245, 212, 0.12)',
+              background: 'var(--base-a-glow)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
             }}
           >
-            <ShieldCheck size={18} color="#00f5d4" aria-hidden="true" />
+            <ShieldCheck size={18} color="var(--base-a)" aria-hidden="true" />
           </div>
           <div>
             <h3 style={{ fontSize: '0.98rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
@@ -40,12 +42,24 @@ export const EthicalAIPanel: React.FC = () => {
           </div>
         </div>
 
-        <div style={{ display: 'flex', gap: 8 }}>
-          <span className="badge badge-g">Zero Data Retention</span>
-          <span className="badge badge-a">WCAG AAA Aligned</span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-mono)',
+              fontSize: '0.74rem',
+              color: 'var(--base-a)',
+              background: 'var(--base-a-glow)',
+              padding: '4px 10px',
+              borderRadius: 'var(--radius-full)',
+              border: '1px solid var(--border-subtle)',
+            }}
+          >
+            Privacy First Architecture
+          </span>
         </div>
       </div>
 
+      {/* 3 Core Ethical Pillars */}
       <div
         style={{
           display: 'grid',
@@ -57,7 +71,7 @@ export const EthicalAIPanel: React.FC = () => {
           style={{
             padding: '10px 12px',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: 'var(--bg-secondary)',
             border: '1px solid var(--border-subtle)',
           }}
         >
@@ -74,7 +88,7 @@ export const EthicalAIPanel: React.FC = () => {
           style={{
             padding: '10px 12px',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: 'var(--bg-secondary)',
             border: '1px solid var(--border-subtle)',
           }}
         >
@@ -91,7 +105,7 @@ export const EthicalAIPanel: React.FC = () => {
           style={{
             padding: '10px 12px',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: 'var(--bg-secondary)',
             border: '1px solid var(--border-subtle)',
           }}
         >
@@ -108,7 +122,7 @@ export const EthicalAIPanel: React.FC = () => {
           style={{
             padding: '10px 12px',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: 'var(--bg-secondary)',
             border: '1px solid var(--border-subtle)',
           }}
         >

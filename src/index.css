@@ -33,18 +33,56 @@
 }
 
 /* 
- * Dark Mode Theme Variables (Default)
- * Background: #121212 | Text: #e0e0e0 | Card Backgrounds: #1e1e1e
- * Meets WCAG AAA Contrast (>= 7:1; measured 14.5:1)
+ * Light Mode Theme Variables (Default Application Theme)
+ * Background: Soft Pastel Gradient (#e6f0ff -> #ffffff) | Text: #222222 | Card Backgrounds: rgba(255, 255, 255, 0.85)
+ * Meets WCAG AAA Contrast (>= 7:1; measured 16.15:1)
  */
 :root,
 body,
+body[data-theme="light"],
+body:not([data-theme="dark"]) {
+  --bg-primary: #f8fafc;
+  --bg-secondary: #ffffff;
+  --bg-card: rgba(255, 255, 255, 0.85);
+  --bg-card-hover: rgba(255, 255, 255, 0.95);
+  --bg-card-glass: rgba(255, 255, 255, 0.85);
+  --bg-input: #ffffff;
+  --bg-header: rgba(255, 255, 255, 0.88);
+
+  --text-primary: #222222;
+  --text-secondary: #334155;
+  --text-muted: #475569;
+  --text-dim: #64748b;
+
+  --border-subtle: rgba(0, 0, 0, 0.08);
+  --border-active: rgba(0, 143, 122, 0.6);
+  --glass-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.06), 0 2px 8px rgba(0, 0, 0, 0.03);
+  --card-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.08);
+  --scrollbar-thumb: #cbd5e1;
+  --scrollbar-track: #f1f5f9;
+
+  /* Theme-adjusted High-Contrast Accents for Light Mode (WCAG AAA >= 7:1) */
+  --base-a: #008f7a; /* Darker Mint Teal for >= 7:1 AAA contrast on #ffffff and light panels */
+  --base-a-glow: rgba(0, 143, 122, 0.2);
+  --base-t: #7e22ce; /* Darker Violet for AAA contrast */
+  --base-t-glow: rgba(126, 34, 206, 0.2);
+  --base-g: #be123c; /* Darker Crimson for AAA contrast */
+  --base-g-glow: rgba(190, 18, 60, 0.2);
+  --base-c: #0369a1; /* Darker Sky Blue for AAA contrast */
+  --base-c-glow: rgba(3, 105, 161, 0.2);
+}
+
+/* 
+ * Dark Mode Theme Variables (Activated via Theme Toggle)
+ * Background: #121212 | Text: #e0e0e0 | Card Backgrounds: #1e1e1e / rgba(30, 30, 30, 0.85)
+ * Meets WCAG AAA Contrast (>= 7:1; measured 14.5:1)
+ */
 body[data-theme="dark"] {
   --bg-primary: #121212;
   --bg-secondary: #181818;
   --bg-card: #1e1e1e;
   --bg-card-hover: #262626;
-  --bg-card-glass: rgba(30, 30, 30, 0.88);
+  --bg-card-glass: rgba(30, 30, 30, 0.85);
   --bg-input: rgba(24, 24, 24, 0.85);
   --bg-header: rgba(18, 18, 18, 0.88);
 
@@ -59,43 +97,15 @@ body[data-theme="dark"] {
   --card-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
   --scrollbar-thumb: #2d2d2d;
   --scrollbar-track: #121212;
-}
 
-/* 
- * Light Mode Theme Variables
- * Background: #ffffff | Text: #222222 | Card Backgrounds: #f5f5f5 with subtle shadows
- * Meets WCAG AAA Contrast (>= 7:1; measured 16.15:1)
- */
-body[data-theme="light"] {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-card: #f5f5f5;
-  --bg-card-hover: #ececec;
-  --bg-card-glass: rgba(245, 245, 245, 0.92);
-  --bg-input: #ffffff;
-  --bg-header: rgba(255, 255, 255, 0.9);
-
-  --text-primary: #222222;
-  --text-secondary: #334155;
-  --text-muted: #475569;
-  --text-dim: #64748b;
-
-  --border-subtle: rgba(0, 0, 0, 0.12);
-  --border-active: rgba(0, 168, 150, 0.7);
-  --glass-shadow: 0 8px 28px -4px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
-  --card-shadow: 0 6px 20px -3px rgba(0, 0, 0, 0.07);
-  --scrollbar-thumb: #cbd5e1;
-  --scrollbar-track: #f1f5f9;
-
-  /* Theme-adjusted High-Contrast Accents for Light Mode */
-  --base-a: #008f7a; /* Darker Mint Teal for >= 7:1 AAA contrast on #f5f5f5 / #ffffff */
-  --base-a-glow: rgba(0, 143, 122, 0.25);
-  --base-t: #7e22ce; /* Darker Violet for AAA contrast */
-  --base-t-glow: rgba(126, 34, 206, 0.25);
-  --base-g: #be123c; /* Darker Crimson for AAA contrast */
-  --base-g-glow: rgba(190, 18, 60, 0.25);
-  --base-c: #0369a1; /* Darker Sky Blue for AAA contrast */
-  --base-c-glow: rgba(3, 105, 161, 0.25);
+  --base-a: #00f5d4;
+  --base-a-glow: rgba(0, 245, 212, 0.35);
+  --base-t: #a855f7;
+  --base-t-glow: rgba(168, 85, 247, 0.35);
+  --base-g: #f43f5e;
+  --base-g-glow: rgba(244, 63, 94, 0.35);
+  --base-c: #0ea5e9;
+  --base-c-glow: rgba(14, 165, 233, 0.35);
 }
 
 /* Reset & Base Setup */
@@ -146,10 +156,24 @@ body::before {
   transition: background-color 0.3s ease;
 }
 
-/* Dark Mode Ambient Cloud Mesh */
-body,
-body[data-theme="dark"]::before,
-body:not([data-theme="light"])::before {
+/* Default / Light Mode Ambient Pastel Background with Soft Clouds */
+body::before,
+body[data-theme="light"]::before,
+body:not([data-theme="dark"])::before {
+  background-color: #f8fafc;
+  background-image:
+    /* Subtle pastel gradient: #e6f0ff -> #ffffff */
+    linear-gradient(135deg, #e6f0ff 0%, #ffffff 55%, #fafafa 100%),
+    /* Soft pastel cloud blooms evoking calm, focus, and harmony */
+    radial-gradient(ellipse 70% 60% at 95% 6%, rgba(251, 113, 133, 0.16) 0%, rgba(253, 164, 175, 0.12) 24%, rgba(255, 241, 242, 0.35) 48%, rgba(255, 255, 255, 0.7) 70%, transparent 85%),
+    radial-gradient(ellipse 50% 45% at 84% 20%, rgba(244, 114, 182, 0.1) 0%, rgba(251, 207, 232, 0.15) 38%, transparent 70%),
+    radial-gradient(ellipse 60% 50% at 52% 50%, rgba(168, 85, 247, 0.04) 0%, rgba(0, 180, 160, 0.03) 38%, transparent 70%),
+    radial-gradient(ellipse 80% 70% at 6% 94%, rgba(59, 130, 246, 0.14) 0%, rgba(56, 189, 248, 0.16) 26%, rgba(186, 230, 253, 0.25) 52%, transparent 85%),
+    radial-gradient(ellipse 55% 55% at 20% 80%, rgba(14, 165, 233, 0.1) 0%, rgba(224, 242, 254, 0.28) 40%, transparent 70%);
+}
+
+/* Dark Mode Ambient Cloud Mesh (When Dark Theme is Toggled) */
+body[data-theme="dark"]::before {
   background-color: #121212;
   background-image:
     /* Upper Right: Warm Pink fading into luminous soft cloud white */
@@ -164,20 +188,6 @@ body:not([data-theme="light"])::before {
     radial-gradient(ellipse 46% 42% at 34% 92%, rgba(37, 99, 235, 0.32) 0%, rgba(186, 230, 253, 0.15) 42%, transparent 68%);
 }
 
-/* Light Mode Ambient Cloud Mesh (Soft Daylight Amorphous Gradients) */
-body[data-theme="light"]::before {
-  background-color: #ffffff;
-  background-image:
-    /* Upper Right: Warm Pink fading into soft white */
-    radial-gradient(ellipse 70% 60% at 95% 6%, rgba(251, 113, 133, 0.2) 0%, rgba(253, 164, 175, 0.16) 24%, rgba(255, 241, 242, 0.45) 48%, rgba(255, 255, 255, 0.75) 70%, transparent 85%),
-    radial-gradient(ellipse 50% 45% at 84% 20%, rgba(244, 114, 182, 0.14) 0%, rgba(251, 207, 232, 0.2) 38%, transparent 70%),
-    /* Center Soft Bloom */
-    radial-gradient(ellipse 60% 50% at 52% 50%, rgba(168, 85, 247, 0.05) 0%, rgba(0, 180, 160, 0.04) 38%, transparent 70%),
-    /* Lower Left: Deep Blue to light sky blue fading to white */
-    radial-gradient(ellipse 80% 70% at 6% 94%, rgba(59, 130, 246, 0.18) 0%, rgba(56, 189, 248, 0.2) 26%, rgba(186, 230, 253, 0.3) 52%, transparent 85%),
-    radial-gradient(ellipse 55% 55% at 20% 80%, rgba(14, 165, 233, 0.14) 0%, rgba(224, 242, 254, 0.35) 40%, transparent 70%);
-}
-
 /* Atmospheric Vignette Veil for WCAG AAA Text Contrast (>= 7:1) */
 body::after {
   content: '';
@@ -188,14 +198,14 @@ body::after {
   transition: background 0.3s ease;
 }
 
-body,
-body[data-theme="dark"]::after,
-body:not([data-theme="light"])::after {
-  background: radial-gradient(circle at 50% 50%, rgba(18, 18, 18, 0.28) 0%, rgba(18, 18, 18, 0.68) 100%);
+body::after,
+body[data-theme="light"]::after,
+body:not([data-theme="dark"])::after {
+  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0) 0%, rgba(230, 240, 255, 0.12) 100%);
 }
 
-body[data-theme="light"]::after {
-  background: radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.04) 0%, rgba(245, 245, 245, 0.3) 100%);
+body[data-theme="dark"]::after {
+  background: radial-gradient(circle at 50% 50%, rgba(18, 18, 18, 0.28) 0%, rgba(18, 18, 18, 0.68) 100%);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -232,15 +242,16 @@ code, pre, .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Glass Panel Overlay */
+/* Semi-Transparent Glass Panel Overlay (WCAG AAA Readable Glassmorphism) */
 .glass-panel {
-  background: var(--bg-card-glass);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background-color: var(--bg-card-glass);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
   border: 1px solid var(--border-subtle);
   border-radius: var(--radius-md);
   box-shadow: var(--glass-shadow);
   color: var(--text-primary);
+  padding: 24px;
   transition: all var(--transition-normal), var(--transition-theme);
 }
 

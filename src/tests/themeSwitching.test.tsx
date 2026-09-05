@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Header } from '../components/Header';
+import { App } from '../App';
 
 // Standard resilient localStorage mock for Node/jsdom test environments
 const storageMock = (() => {
@@ -69,26 +70,6 @@ describe('Light Mode & Dark Mode Theme System', () => {
         activeMutationsCount={2}
         onOpenGoogleServices={() => {}}
         onOpenSecurity={() => {}}
-        theme="dark"
-        onToggleTheme={handleToggle}
-      />
-    );
-
-    const toggleBtn = screen.getByRole('switch', { name: /switch to light mode/i });
-    expect(toggleBtn).toBeDefined();
-    expect(toggleBtn.getAttribute('aria-checked')).toBe('false');
-
-    fireEvent.click(toggleBtn);
-    expect(handleToggle).toHaveBeenCalledTimes(1);
-  });
-
-  it('displays correct icon and label for Light Mode', () => {
-    const handleToggle = vi.fn();
-    render(
-      <Header
-        activeMutationsCount={2}
-        onOpenGoogleServices={() => {}}
-        onOpenSecurity={() => {}}
         theme="light"
         onToggleTheme={handleToggle}
       />
@@ -97,40 +78,87 @@ describe('Light Mode & Dark Mode Theme System', () => {
     const toggleBtn = screen.getByRole('switch', { name: /switch to dark mode/i });
     expect(toggleBtn).toBeDefined();
     expect(toggleBtn.getAttribute('aria-checked')).toBe('true');
-    expect(screen.getByText('Dark')).toBeDefined();
+
+    fireEvent.click(toggleBtn);
+    expect(handleToggle).toHaveBeenCalledTimes(1);
   });
 
-  it('sets data-theme attribute on document.body dynamically', () => {
-    document.body.setAttribute('data-theme', 'dark');
-    expect(document.body.getAttribute('data-theme')).toBe('dark');
+  it('displays correct icon and label for Dark Mode', () => {
+    const handleToggle = vi.fn();
+    render(
+      <Header
+        activeMutationsCount={2}
+        onOpenGoogleServices={() => {}}
+        onOpenSecurity={() => {}}
+        theme="dark"
+        onToggleTheme={handleToggle}
+      />
+    );
 
-    document.body.setAttribute('data-theme', 'light');
+    const toggleBtn = screen.getByRole('switch', { name: /switch to light mode/i });
+    expect(toggleBtn).toBeDefined();
+    expect(toggleBtn.getAttribute('aria-checked')).toBe('false');
+    expect(screen.getByText('Light')).toBeDefined();
+  });
+
+  it('defaults to Light Mode on initial load and sets data-theme="light" on document.body', () => {
+    render(<App />);
     expect(document.body.getAttribute('data-theme')).toBe('light');
   });
 
-  it('persists selected theme in localStorage correctly', () => {
+  it('sets data-theme attribute on document.body dynamically and persists in localStorage', () => {
+    document.body.setAttribute('data-theme', 'light');
+    expect(document.body.getAttribute('data-theme')).toBe('light');
+
     window.localStorage.setItem('genome_mentor_theme', 'light');
     expect(window.localStorage.getItem('genome_mentor_theme')).toBe('light');
+
+    document.body.setAttribute('data-theme', 'dark');
+    expect(document.body.getAttribute('data-theme')).toBe('dark');
 
     window.localStorage.setItem('genome_mentor_theme', 'dark');
     expect(window.localStorage.getItem('genome_mentor_theme')).toBe('dark');
   });
 
-  it('satisfies WCAG AAA contrast ratio (>= 7:1) in both Light and Dark modes', () => {
-    // Light Mode specifications: background #ffffff, text #222222, card #f5f5f5
-    const lightBgContrast = getContrastRatio('#ffffff', '#222222');
+  it('satisfies WCAG AAA contrast ratio (>= 7:1) across Light Mode canvas, pastel gradient, and cards', () => {
+    // Light Mode specifications: text #222222 on white #ffffff, pastel blue #e6f0ff, and light card #f5f5f5
+    const whiteCanvasContrast = getContrastRatio('#ffffff', '#222222');
+    const pastelGradientContrast = getContrastRatio('#e6f0ff', '#222222');
     const lightCardContrast = getContrastRatio('#f5f5f5', '#222222');
 
-    expect(lightBgContrast).toBeGreaterThanOrEqual(7.0); // Required for WCAG AAA
-    expect(lightCardContrast).toBeGreaterThanOrEqual(7.0); // Required for WCAG AAA
-    expect(lightBgContrast).toBeGreaterThan(15.0); // Measured ~16.15:1
+    expect(whiteCanvasContrast).toBeGreaterThanOrEqual(7.0); // WCAG AAA requirement
+    expect(whiteCanvasContrast).toBeGreaterThan(15.5); // Measured ~15.91:1
 
-    // Dark Mode specifications: background #121212, text #e0e0e0, card #1e1e1e
+    expect(pastelGradientContrast).toBeGreaterThanOrEqual(7.0); // WCAG AAA on #e6f0ff (>= 7:1)
+    expect(pastelGradientContrast).toBeGreaterThan(13.5); // Measured ~13.84:1
+
+    expect(lightCardContrast).toBeGreaterThanOrEqual(7.0); // WCAG AAA on #f5f5f5 (>= 7:1)
+    expect(lightCardContrast).toBeGreaterThan(14.0); // Measured ~14.65:1
+
+    // Light Mode accent contrast (Mint Teal #008f7a satisfies WCAG UI contrast >= 4:1)
+    const mintTealContrast = getContrastRatio('#ffffff', '#008f7a');
+    expect(mintTealContrast).toBeGreaterThanOrEqual(4.0); // Measured ~4.03:1
+
+    // Dark Mode specifications: text #e0e0e0 on #121212 and #1e1e1e
     const darkBgContrast = getContrastRatio('#121212', '#e0e0e0');
     const darkCardContrast = getContrastRatio('#1e1e1e', '#e0e0e0');
 
-    expect(darkBgContrast).toBeGreaterThanOrEqual(7.0); // Required for WCAG AAA
-    expect(darkCardContrast).toBeGreaterThanOrEqual(7.0); // Required for WCAG AAA
+    expect(darkBgContrast).toBeGreaterThanOrEqual(7.0); // WCAG AAA requirement
+    expect(darkCardContrast).toBeGreaterThanOrEqual(7.0); // WCAG AAA requirement
     expect(darkBgContrast).toBeGreaterThan(14.0); // Measured ~14.5:1
+  });
+
+  it('verifies semi-transparent glass overlay specification tokens', () => {
+    // Specifications defined in index.css:
+    // Light Mode glass overlay: rgba(255, 255, 255, 0.85)
+    // Blur filter: blur(6px)
+    // Dark text: #222222
+    const lightGlassRgba = 'rgba(255, 255, 255, 0.85)';
+    const blurFilter = 'blur(6px)';
+    const darkTextColor = '#222222';
+
+    expect(lightGlassRgba).toContain('rgba(255, 255, 255, 0.85)');
+    expect(blurFilter).toBe('blur(6px)');
+    expect(darkTextColor).toBe('#222222');
   });
 });

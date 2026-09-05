@@ -33,9 +33,11 @@ export const IdeaEvolutionTracker: React.FC<IdeaEvolutionTrackerProps> = ({ hist
     <section
       className="glass-panel"
       style={{
-        padding: '22px 26px',
+        padding: '24px',
         border: '1px solid var(--border-subtle)',
-        background: 'linear-gradient(135deg, rgba(13, 19, 34, 0.85) 0%, rgba(7, 10, 19, 0.95) 100%)',
+        background: 'var(--bg-card-glass)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
       }}
       aria-label="Idea Evolution Timeline"
     >
@@ -45,14 +47,14 @@ export const IdeaEvolutionTracker: React.FC<IdeaEvolutionTrackerProps> = ({ hist
             width: 36,
             height: 36,
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(0, 245, 212, 0.15)',
+            background: 'var(--base-a-glow)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            border: '1px solid rgba(0, 245, 212, 0.3)',
+            border: '1px solid var(--border-active)',
           }}
         >
-          <GitCommit size={20} color="#00f5d4" aria-hidden="true" />
+          <GitCommit size={20} color="var(--base-a)" aria-hidden="true" />
         </div>
         <div>
           <h2 style={{ fontSize: '1.15rem', fontWeight: 700, color: 'var(--text-primary)', margin: 0 }}>
@@ -82,7 +84,7 @@ export const IdeaEvolutionTracker: React.FC<IdeaEvolutionTrackerProps> = ({ hist
                 minWidth: 200,
                 padding: '12px 14px',
                 borderRadius: 'var(--radius-sm)',
-                background: 'rgba(255, 255, 255, 0.02)',
+                background: 'var(--bg-secondary)',
                 border: '1px solid var(--border-subtle)',
                 display: 'flex',
                 flexDirection: 'column',
@@ -95,8 +97,8 @@ export const IdeaEvolutionTracker: React.FC<IdeaEvolutionTrackerProps> = ({ hist
                     style={{
                       fontSize: '0.7rem',
                       fontFamily: 'var(--font-mono)',
-                      color: '#00f5d4',
-                      background: 'rgba(0, 245, 212, 0.08)',
+                      color: 'var(--base-a)',
+                      background: 'var(--base-a-glow)',
                       padding: '2px 6px',
                       borderRadius: 4,
                     }}

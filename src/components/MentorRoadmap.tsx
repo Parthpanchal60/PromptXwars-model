@@ -64,7 +64,7 @@ export const MentorRoadmap: React.FC<MentorRoadmapProps> = ({
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value as GeneCategory | 'All')}
               style={{
-                background: 'rgba(15, 23, 42, 0.9)',
+                background: 'var(--bg-input)',
                 color: 'var(--text-primary)',
                 border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-sm)',
@@ -111,9 +111,9 @@ export const MentorRoadmap: React.FC<MentorRoadmapProps> = ({
             <div
               key={sprintId}
               style={{
-                background: 'rgba(7, 10, 19, 0.75)',
-                backdropFilter: 'blur(16px)',
-                WebkitBackdropFilter: 'blur(16px)',
+                background: 'var(--bg-card)',
+                backdropFilter: 'blur(6px)',
+                WebkitBackdropFilter: 'blur(6px)',
                 border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-md)',
                 padding: 14,
@@ -124,7 +124,7 @@ export const MentorRoadmap: React.FC<MentorRoadmapProps> = ({
             >
               {/* Sprint Column Header */}
               <div style={{ borderBottom: '1px solid var(--border-subtle)', paddingBottom: 8 }}>
-                <h3 style={{ fontSize: '0.96rem', fontWeight: 700, color: '#f8fafc' }}>{name}</h3>
+                <h3 style={{ fontSize: '0.96rem', fontWeight: 700, color: 'var(--text-primary)' }}>{name}</h3>
                 <p style={{ fontSize: '0.75rem', color: 'var(--text-dim)', marginTop: 2 }}>{desc}</p>
               </div>
 
@@ -143,10 +143,10 @@ export const MentorRoadmap: React.FC<MentorRoadmapProps> = ({
                     <div
                       key={card.id}
                       style={{
-                        background: 'rgba(15, 23, 42, 0.82)',
-                        backdropFilter: 'blur(12px)',
-                        WebkitBackdropFilter: 'blur(12px)',
-                        border: '1px solid rgba(255, 255, 255, 0.08)',
+                        background: 'var(--bg-secondary)',
+                        backdropFilter: 'blur(6px)',
+                        WebkitBackdropFilter: 'blur(6px)',
+                        border: '1px solid var(--border-subtle)',
                         borderRadius: 'var(--radius-sm)',
                         padding: 12,
                         display: 'flex',

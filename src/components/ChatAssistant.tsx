@@ -386,12 +386,13 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
             right: 24,
             width: 'min(420px, calc(100vw - 32px))',
             height: isMinimized ? '56px' : 'min(620px, calc(100vh - 100px))',
-            background: 'var(--bg-card)',
+            background: 'var(--bg-card-glass)',
             color: 'var(--text-primary)',
             border: '1px solid var(--border-active)',
             borderRadius: 'var(--radius-lg)',
             boxShadow: 'var(--glass-shadow)',
-            backdropFilter: 'blur(20px)',
+            backdropFilter: 'blur(6px)',
+            WebkitBackdropFilter: 'blur(6px)',
             zIndex: 1000,
             display: 'flex',
             flexDirection: 'column',
@@ -557,11 +558,11 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
                             : '14px 14px 14px 2px',
                         background:
                           msg.role === 'user'
-                            ? 'linear-gradient(135deg, rgba(168, 85, 247, 0.3) 0%, rgba(121, 40, 202, 0.4) 100%)'
-                            : 'rgba(255, 255, 255, 0.04)',
+                            ? 'var(--base-a-glow)'
+                            : 'var(--bg-secondary)',
                         border:
                           msg.role === 'user'
-                            ? '1px solid rgba(168, 85, 247, 0.4)'
+                            ? '1px solid var(--border-active)'
                             : '1px solid var(--border-subtle)',
                         color: 'var(--text-primary)',
                         fontSize: '0.86rem',

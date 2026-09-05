@@ -40,14 +40,16 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
       <div
         className="glass-panel"
         style={{
-          padding: '20px 24px',
+          padding: '24px',
           border: '1px solid var(--border-subtle)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
           flexWrap: 'wrap',
           gap: 16,
-          background: 'linear-gradient(135deg, rgba(13, 19, 34, 0.8) 0%, rgba(7, 10, 19, 0.95) 100%)',
+          background: 'var(--bg-card-glass)',
+          backdropFilter: 'blur(6px)',
+          WebkitBackdropFilter: 'blur(6px)',
         }}
       >
         <div>
@@ -68,13 +70,13 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
             style={{
               padding: '8px 16px',
               borderRadius: 'var(--radius-sm)',
-              background: 'rgba(0, 245, 212, 0.08)',
-              border: '1px solid rgba(0, 245, 212, 0.25)',
+              background: 'var(--base-a-glow)',
+              border: '1px solid var(--border-subtle)',
               textAlign: 'center',
             }}
           >
             <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>CORE FEATURES</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#00f5d4' }}>
+            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--base-a)' }}>
               {plan.features.length}
             </div>
           </div>
@@ -82,13 +84,13 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
             style={{
               padding: '8px 16px',
               borderRadius: 'var(--radius-sm)',
-              background: 'rgba(168, 85, 247, 0.08)',
-              border: '1px solid rgba(168, 85, 247, 0.25)',
+              background: 'var(--base-t-glow)',
+              border: '1px solid var(--border-subtle)',
               textAlign: 'center',
             }}
           >
             <div style={{ fontSize: '0.7rem', color: 'var(--text-muted)' }}>STACK TIERS</div>
-            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: '#c084fc' }}>
+            <div style={{ fontSize: '1.2rem', fontWeight: 800, color: 'var(--base-t)' }}>
               {plan.techStack.length}
             </div>
           </div>
@@ -111,7 +113,7 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
             display: 'flex',
             flexDirection: 'column',
             gap: 14,
-            borderTop: '3px solid #00f5d4',
+            borderTop: '3px solid var(--base-a)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -120,13 +122,13 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
                 width: 32,
                 height: 32,
                 borderRadius: 'var(--radius-sm)',
-                background: 'rgba(0, 245, 212, 0.12)',
+                background: 'var(--base-a-glow)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Sparkles size={18} color="#00f5d4" aria-hidden="true" />
+              <Sparkles size={18} color="var(--base-a)" aria-hidden="true" />
             </div>
             <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
               Core Features to Build
@@ -148,7 +150,7 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
               >
                 <CheckCircle2
                   size={16}
-                  color="#00f5d4"
+                  color="var(--base-a)"
                   style={{ flexShrink: 0, marginTop: 2 }}
                   aria-hidden="true"
                 />
@@ -166,7 +168,7 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
             display: 'flex',
             flexDirection: 'column',
             gap: 14,
-            borderTop: '3px solid #a855f7',
+            borderTop: '3px solid var(--base-t)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -175,13 +177,13 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
                 width: 32,
                 height: 32,
                 borderRadius: 'var(--radius-sm)',
-                background: 'rgba(168, 85, 247, 0.12)',
+                background: 'var(--base-t-glow)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Layers size={18} color="#a855f7" aria-hidden="true" />
+              <Layers size={18} color="var(--base-t)" aria-hidden="true" />
             </div>
             <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
               Recommended Tech Stack
@@ -198,7 +200,7 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
                   alignItems: 'center',
                   padding: '8px 12px',
                   borderRadius: 'var(--radius-sm)',
-                  background: 'rgba(255, 255, 255, 0.03)',
+                  background: 'var(--bg-secondary)',
                   border: '1px solid var(--border-subtle)',
                   fontSize: '0.84rem',
                 }}
@@ -209,10 +211,10 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
                     color: 'var(--text-primary)',
                     fontFamily: 'var(--font-mono)',
                     fontSize: '0.8rem',
-                    background: 'rgba(0, 245, 212, 0.08)',
+                    background: 'var(--base-a-glow)',
                     padding: '2px 8px',
                     borderRadius: 4,
-                    border: '1px solid rgba(0, 245, 212, 0.2)',
+                    border: '1px solid var(--border-subtle)',
                   }}
                 >
                   {tier.tech}
@@ -230,7 +232,7 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
             display: 'flex',
             flexDirection: 'column',
             gap: 14,
-            borderTop: '3px solid #38bdf8',
+            borderTop: '3px solid var(--base-c)',
           }}
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
@@ -239,13 +241,13 @@ export const ProjectInfoCards: React.FC<ProjectInfoCardsProps> = ({ plan }) => {
                 width: 32,
                 height: 32,
                 borderRadius: 'var(--radius-sm)',
-                background: 'rgba(56, 189, 248, 0.12)',
+                background: 'rgba(3, 105, 161, 0.15)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
               }}
             >
-              <Terminal size={18} color="#38bdf8" aria-hidden="true" />
+              <Terminal size={18} color="var(--base-c)" aria-hidden="true" />
             </div>
             <h3 style={{ fontSize: '1.05rem', fontWeight: 700, color: 'var(--text-primary)' }}>
               Step-by-Step Dev Steps

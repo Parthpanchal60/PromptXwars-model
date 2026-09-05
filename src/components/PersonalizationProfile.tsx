@@ -99,9 +99,11 @@ export const PersonalizationProfile: React.FC<PersonalizationProfileProps> = ({
     <section
       className="glass-panel"
       style={{
-        padding: '22px 26px',
+        padding: '24px',
         border: '1px solid var(--border-subtle)',
-        background: 'linear-gradient(135deg, rgba(13, 19, 34, 0.85) 0%, rgba(7, 10, 19, 0.95) 100%)',
+        background: 'var(--bg-card-glass)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
       }}
       aria-label="Student Skill Profile & Personalization"
     >
@@ -219,9 +221,9 @@ export const PersonalizationProfile: React.FC<PersonalizationProfileProps> = ({
                     padding: '4px 10px',
                     borderRadius: 'var(--radius-sm)',
                     fontSize: '0.78rem',
-                    border: active ? '1px solid #00f5d4' : '1px solid var(--border-subtle)',
-                    background: active ? 'rgba(0, 245, 212, 0.15)' : 'rgba(255, 255, 255, 0.03)',
-                    color: active ? '#00f5d4' : 'var(--text-secondary)',
+                    border: active ? '1px solid var(--base-a)' : '1px solid var(--border-subtle)',
+                    background: active ? 'var(--base-a-glow)' : 'rgba(0, 0, 0, 0.03)',
+                    color: active ? 'var(--base-a)' : 'var(--text-secondary)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
@@ -249,7 +251,7 @@ export const PersonalizationProfile: React.FC<PersonalizationProfileProps> = ({
               fontWeight: 600,
             }}
           >
-            <Cpu size={13} color="#c084fc" /> TECHNICAL SKILLS &amp; FRAMEWORKS
+            <Cpu size={13} color="var(--base-t)" /> TECHNICAL SKILLS &amp; FRAMEWORKS
           </label>
           <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 8 }}>
             {COMMON_SKILLS.map((skill) => {
@@ -263,9 +265,9 @@ export const PersonalizationProfile: React.FC<PersonalizationProfileProps> = ({
                     padding: '4px 9px',
                     borderRadius: 'var(--radius-sm)',
                     fontSize: '0.75rem',
-                    border: active ? '1px solid #a855f7' : '1px solid var(--border-subtle)',
-                    background: active ? 'rgba(168, 85, 247, 0.15)' : 'rgba(255, 255, 255, 0.03)',
-                    color: active ? '#c084fc' : 'var(--text-secondary)',
+                    border: active ? '1px solid var(--base-t)' : '1px solid var(--border-subtle)',
+                    background: active ? 'var(--base-t-glow)' : 'rgba(0, 0, 0, 0.03)',
+                    color: active ? 'var(--base-t)' : 'var(--text-secondary)',
                     cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',

@@ -43,8 +43,10 @@ export const IdeaDomainInput: React.FC<IdeaDomainInputProps> = ({
       className="glass-panel"
       style={{
         padding: '24px 28px',
-        border: '1px solid var(--border-active)',
-        background: 'linear-gradient(135deg, rgba(13, 19, 34, 0.9) 0%, rgba(7, 10, 19, 0.95) 100%)',
+        border: '1px solid var(--border-subtle)',
+        background: 'var(--bg-card-glass)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
       }}
       aria-label="Student Project Idea & Domain Selection"
     >
@@ -54,14 +56,14 @@ export const IdeaDomainInput: React.FC<IdeaDomainInputProps> = ({
             width: 36,
             height: 36,
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(0, 245, 212, 0.12)',
+            background: 'var(--base-a-glow)',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
-            border: '1px solid rgba(0, 245, 212, 0.3)',
+            border: '1px solid var(--border-active)',
           }}
         >
-          <Lightbulb size={20} color="#00f5d4" aria-hidden="true" />
+          <Lightbulb size={20} color="var(--base-a)" aria-hidden="true" />
         </div>
         <div>
           <h2 style={{ fontSize: '1.2rem', fontWeight: 700, color: 'var(--text-primary)' }}>
@@ -102,22 +104,25 @@ export const IdeaDomainInput: React.FC<IdeaDomainInputProps> = ({
               type="text"
               value={ideaText}
               onChange={(e) => setIdeaText(e.target.value)}
-              placeholder="e.g. AI-assisted triage for rural clinics, or automated micro-savings for students"
+              placeholder="e.g. Real-time emergency vitals triage, Automated code reviewer..."
+              className="input-field"
               style={{
                 width: '100%',
-                background: 'rgba(7, 10, 19, 0.85)',
+                background: 'var(--bg-input)',
                 color: 'var(--text-primary)',
-                border: errorMsg ? '1px solid #f43f5e' : '1px solid var(--border-subtle)',
+                border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-sm)',
                 padding: '10px 14px',
-                fontSize: '0.92rem',
+                fontSize: '0.9rem',
                 outline: 'none',
               }}
+              aria-label="WHAT DO YOU WANT TO BUILD?"
+              required
             />
           </div>
 
-          {/* Domain Dropdown */}
-          <div style={{ minWidth: 180 }}>
+          {/* Domain Dropdown Selector */}
+          <div>
             <label
               htmlFor="domain-select"
               style={{
@@ -138,7 +143,7 @@ export const IdeaDomainInput: React.FC<IdeaDomainInputProps> = ({
                 onChange={(e) => setSelectedDomain(e.target.value as ProjectDomain)}
                 style={{
                   width: '100%',
-                  background: 'rgba(7, 10, 19, 0.85)',
+                  background: 'var(--bg-input)',
                   color: 'var(--text-primary)',
                   border: '1px solid var(--border-subtle)',
                   borderRadius: 'var(--radius-sm)',
@@ -149,7 +154,7 @@ export const IdeaDomainInput: React.FC<IdeaDomainInputProps> = ({
                 }}
               >
                 {DOMAINS.map((dom) => (
-                  <option key={dom} value={dom} style={{ background: '#0d1322', color: '#f8fafc' }}>
+                  <option key={dom} value={dom} style={{ background: 'var(--bg-card)', color: 'var(--text-primary)' }}>
                     {dom}
                   </option>
                 ))}

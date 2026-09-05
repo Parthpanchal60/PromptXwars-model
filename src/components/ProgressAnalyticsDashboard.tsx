@@ -22,9 +22,11 @@ export const ProgressAnalyticsDashboard: React.FC<ProgressAnalyticsDashboardProp
     <section
       className="glass-panel"
       style={{
-        padding: '22px 26px',
+        padding: '24px',
         border: '1px solid var(--border-subtle)',
-        background: 'linear-gradient(135deg, rgba(13, 19, 34, 0.85) 0%, rgba(7, 10, 19, 0.95) 100%)',
+        background: 'var(--bg-card-glass)',
+        backdropFilter: 'blur(6px)',
+        WebkitBackdropFilter: 'blur(6px)',
       }}
       aria-label="Student Progress Analytics & Gamified Rewards"
     >
@@ -88,7 +90,7 @@ export const ProgressAnalyticsDashboard: React.FC<ProgressAnalyticsDashboardProp
           style={{
             padding: '12px 14px',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: 'var(--bg-secondary)',
             border: '1px solid var(--border-subtle)',
           }}
         >
@@ -127,7 +129,7 @@ export const ProgressAnalyticsDashboard: React.FC<ProgressAnalyticsDashboardProp
           style={{
             padding: '12px 14px',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: 'var(--bg-secondary)',
             border: '1px solid var(--border-subtle)',
           }}
         >
@@ -166,7 +168,7 @@ export const ProgressAnalyticsDashboard: React.FC<ProgressAnalyticsDashboardProp
           style={{
             padding: '12px 14px',
             borderRadius: 'var(--radius-sm)',
-            background: 'rgba(255, 255, 255, 0.02)',
+            background: 'var(--bg-secondary)',
             border: '1px solid var(--border-subtle)',
           }}
         >

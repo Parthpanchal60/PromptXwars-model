@@ -132,18 +132,18 @@ export const App: React.FC = () => {
   // Student Profile State
   const [studentProfile, setStudentProfile] = useState<StudentProfile>(DEFAULT_STUDENT_PROFILE);
 
-  // Theme State ('light' | 'dark') with persistence & system preference detection
+  // Theme State ('light' | 'dark') with persistence & system preference detection (Default: light)
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     try {
       const saved = localStorage.getItem('genome_mentor_theme');
       if (saved === 'light' || saved === 'dark') return saved;
-      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-        return 'light';
+      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        return 'dark';
       }
     } catch {
       // Fallback
     }
-    return 'dark';
+    return 'light';
   });
 
   // Synchronize data-theme attribute on <body> element
