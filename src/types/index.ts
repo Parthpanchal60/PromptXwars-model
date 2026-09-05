@@ -93,7 +93,7 @@ export interface JudgeRubricItem {
 }
 
 export interface JudgeEvaluation {
-  totalScore: number; // Target 99/100
+  totalScore: number; // Target 99-100/100
   rubrics: JudgeRubricItem[];
   verdict: 'Accepted for Podium' | 'Finalist Grade' | 'Needs Hardening';
   summary: string;

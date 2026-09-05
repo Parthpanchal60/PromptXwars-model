@@ -1,0 +1,17 @@
+{
+  "name": "Genome Mentor - Hackathon Project DNA & Judge Simulator",
+  "short_name": "GenomeMentor",
+  "description": "Personalized student capstone ideation, DNA mutation engine, sprint roadmaps, and viva defense preparation cockpit.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#070a12",
+  "theme_color": "#070a12",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧬</text></svg>",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

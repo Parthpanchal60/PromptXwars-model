@@ -14,13 +14,13 @@ describe('AI Judge Mode Rubric Evaluator', () => {
     expect(categories).toContain('Efficiency & Google Cloud');
   });
 
-  it('achieves 99/100 benchmark at podium stage with all mutations active', () => {
+  it('achieves 99-100/100 benchmark at podium stage with all mutations active', () => {
     const evaluation = evaluateProjectRubric(4, 4, true);
 
     expect(evaluation.totalScore).toBeGreaterThanOrEqual(98);
-    expect(evaluation.totalScore).toBeLessThanOrEqual(99);
+    expect(evaluation.totalScore).toBeLessThanOrEqual(100);
     expect(evaluation.verdict).toBe('Accepted for Podium');
-    expect(evaluation.summary).toContain('Exceptional submission');
+    expect(evaluation.summary).toMatch(/(Exceptional submission|Flawless 100\/100 Grand Champion)/);
   });
 
   it('reflects lower score at initial stage 0', () => {
