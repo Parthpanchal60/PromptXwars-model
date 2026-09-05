@@ -196,8 +196,6 @@ export async function POST(request) {
       const errorData = await geminiResponse.json().catch(() => ({}));
       const errorMessage = errorData.error?.message || `Gemini API returned status ${geminiResponse.status}`;
 
-      console.error('[Gemini Chat API Error]:', errorMessage);
-
       return new Response(
         JSON.stringify({
           error: 'Upstream AI Service Error. Please try again shortly.',
@@ -230,9 +228,7 @@ export async function POST(request) {
         },
       }
     );
-  } catch (error) {
-    console.error('[Chat API Unexpected Exception]:', error);
-
+  } catch (_error) {
     return new Response(
       JSON.stringify({
         error: 'An internal server error occurred while processing your chat request.',

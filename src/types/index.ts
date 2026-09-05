@@ -237,4 +237,25 @@ export interface IdeaMutationSnapshot {
   summary: string;
   source: 'initial' | 'profile_tuned' | 'team_merged' | 'feasibility_hardened';
   tag: string;
+}/**
+ * Category for capstone viva / defense questions
+ */
+export type VivaCategory =
+  | 'Architecture & Design'
+  | 'Security & Compliance'
+  | 'Scalability & Performance'
+  | 'Feasibility & Trade-offs'
+  | 'Testing & Reliability';
+
+/**
+ * Viva & Defense Preparation Question Card
+ */
+export interface VivaDefenseQuestion {
+  id: string;
+  category: VivaCategory;
+  question: string;
+  expectedDepth: 'High' | 'Medium' | 'Critical';
+  recommendedTalkingPoints: string[];
+  examinerTips: string;
+  codeReferenceHint?: string;
 }

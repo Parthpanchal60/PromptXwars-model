@@ -49,6 +49,7 @@ import { MentorRoadmap } from './components/MentorRoadmap';
 import { JudgeMode } from './components/JudgeMode';
 import { EvolutionTimeline } from './components/EvolutionTimeline';
 import { EthicalAIPanel } from './components/EthicalAIPanel';
+import { VivaDefensePrep } from './components/VivaDefensePrep';
 import { ChatAssistant } from './components/ChatAssistant';
 import { GoogleServicesModal } from './components/GoogleServicesModal';
 import { SecurityPanel } from './components/SecurityPanel';
@@ -633,7 +634,10 @@ export const App: React.FC = () => {
           </div>
         </div>
 
-        {/* 10. Ethical AI Transparency & Privacy Assurance Panel */}
+        {/* 10. Viva & Capstone Defense Preparation Cockpit */}
+        <VivaDefensePrep plan={projectPlan} />
+
+        {/* 11. Ethical AI Transparency & Privacy Assurance Panel */}
         <EthicalAIPanel />
 
         {/*
