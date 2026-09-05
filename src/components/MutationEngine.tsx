@@ -1,19 +1,31 @@
 import React, { useState } from 'react';
 import { Mutation } from '../types';
-import { Zap, ArrowRight, Check, Sparkles, AlertCircle } from 'lucide-react';
+import { generateGeminiMutationAdvice } from '../utils/googleServices';
+import { Zap, ArrowRight, Check, Sparkles, AlertCircle, Bot, RefreshCw } from 'lucide-react';
 
 interface MutationEngineProps {
   mutations: Mutation[];
   onToggleMutation: (mutationId: string) => void;
+  projectName?: string;
 }
 
 export const MutationEngine: React.FC<MutationEngineProps> = ({
   mutations,
   onToggleMutation,
+  projectName = 'PromptXwars',
 }) => {
   const [activePreviewId, setActivePreviewId] = useState<string>(mutations[0]?.id || '');
+  const [geminiAdvice, setGeminiAdvice] = useState<string | null>(null);
+  const [isLoadingGemini, setIsLoadingGemini] = useState(false);
 
   const activeMutation = mutations.find((m) => m.id === activePreviewId) || mutations[0];
+
+  const handleAskGemini = async () => {
+    setIsLoadingGemini(true);
+    const advice = await generateGeminiMutationAdvice(projectName);
+    setGeminiAdvice(advice);
+    setIsLoadingGemini(false);
+  };
 
   return (
     <section
@@ -33,7 +45,43 @@ export const MutationEngine: React.FC<MutationEngineProps> = ({
             AI evaluates structural gaps and suggests targeted genetic mutations to boost judge scores.
           </p>
         </div>
+
+        <button
+          className="btn btn-purple"
+          onClick={handleAskGemini}
+          disabled={isLoadingGemini}
+          style={{ fontSize: '0.8rem', padding: '6px 12px' }}
+          aria-label="Generate live architectural advice with Gemini 3.6 Flash"
+        >
+          {isLoadingGemini ? <RefreshCw className="spin" size={14} /> : <Bot size={14} />}
+          <span>{isLoadingGemini ? 'Consulting Gemini...' : 'Ask Gemini 3.6 Flash'}</span>
+        </button>
       </div>
+
+      {/* Live Gemini AI Advice Callout */}
+      {geminiAdvice && (
+        <div
+          style={{
+            background: 'linear-gradient(135deg, rgba(168, 85, 247, 0.15) 0%, rgba(0, 245, 212, 0.1) 100%)',
+            border: '1px solid rgba(168, 85, 247, 0.35)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '12px 14px',
+            fontSize: '0.82rem',
+            color: 'var(--text-primary)',
+            display: 'flex',
+            alignItems: 'flex-start',
+            gap: 10,
+          }}
+        >
+          <Bot size={18} color="#00f5d4" style={{ marginTop: 2, flexShrink: 0 }} />
+          <div>
+            <strong style={{ color: '#00f5d4' }}>Gemini 3.6 Flash Recommendation:</strong>
+            <div style={{ marginTop: 4, color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+              {geminiAdvice}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Grid of Mutation Options */}
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 12 }}>

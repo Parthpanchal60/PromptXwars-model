@@ -255,6 +255,7 @@ export const App: React.FC = () => {
             <MutationEngine
               mutations={mutations}
               onToggleMutation={handleToggleMutation}
+              projectName={projectName}
             />
           </div>
 
