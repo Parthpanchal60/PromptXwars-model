@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Gene,
   Mutation,
@@ -131,6 +131,34 @@ const INITIAL_IDEA_HISTORY: IdeaMutationSnapshot[] = [
 export const App: React.FC = () => {
   // Student Profile State
   const [studentProfile, setStudentProfile] = useState<StudentProfile>(DEFAULT_STUDENT_PROFILE);
+
+  // Theme State ('light' | 'dark') with persistence & system preference detection
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => {
+    try {
+      const saved = localStorage.getItem('genome_mentor_theme');
+      if (saved === 'light' || saved === 'dark') return saved;
+      if (typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
+        return 'light';
+      }
+    } catch {
+      // Fallback
+    }
+    return 'dark';
+  });
+
+  // Synchronize data-theme attribute on <body> element
+  useEffect(() => {
+    document.body.setAttribute('data-theme', theme);
+    try {
+      localStorage.setItem('genome_mentor_theme', theme);
+    } catch {
+      // Ignore
+    }
+  }, [theme]);
+
+  const handleToggleTheme = () => {
+    setTheme((prev) => (prev === 'light' ? 'dark' : 'light'));
+  };
 
   // Team Collaboration State
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>(INITIAL_TEAM_MEMBERS);
@@ -440,6 +468,8 @@ export const App: React.FC = () => {
         onExportSubmission={handleExportSubmission}
         branchName="main"
         repoSizeMb={0.84}
+        theme={theme}
+        onToggleTheme={handleToggleTheme}
       />
 
       <main
@@ -520,7 +550,7 @@ export const App: React.FC = () => {
               onChange={handleProjectNameChange}
               style={{
                 width: '100%',
-                background: 'rgba(7, 10, 19, 0.7)',
+                background: 'var(--bg-input)',
                 color: 'var(--text-primary)',
                 border: projectInputError ? '1px solid #f43f5e' : '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-sm)',

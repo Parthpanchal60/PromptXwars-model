@@ -386,16 +386,17 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
             right: 24,
             width: 'min(420px, calc(100vw - 32px))',
             height: isMinimized ? '56px' : 'min(620px, calc(100vh - 100px))',
-            background: 'linear-gradient(180deg, rgba(13, 19, 34, 0.98) 0%, rgba(7, 10, 19, 0.98) 100%)',
+            background: 'var(--bg-card)',
+            color: 'var(--text-primary)',
             border: '1px solid var(--border-active)',
             borderRadius: 'var(--radius-lg)',
-            boxShadow: '0 12px 48px rgba(0, 0, 0, 0.7)',
+            boxShadow: 'var(--glass-shadow)',
             backdropFilter: 'blur(20px)',
             zIndex: 1000,
             display: 'flex',
             flexDirection: 'column',
             overflow: 'hidden',
-            transition: 'height 0.2s ease',
+            transition: 'height 0.2s ease, background 0.25s ease',
           }}
         >
           {/* Header */}
@@ -637,7 +638,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
                 style={{
                   padding: '12px 14px',
                   borderTop: '1px solid var(--border-subtle)',
-                  background: 'rgba(7, 10, 19, 0.9)',
+                  background: 'var(--bg-secondary)',
                 }}
               >
                 <div
@@ -645,7 +646,7 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
                     display: 'flex',
                     alignItems: 'flex-end',
                     gap: 8,
-                    background: 'rgba(255, 255, 255, 0.04)',
+                    background: 'var(--bg-input)',
                     border: '1px solid var(--border-subtle)',
                     borderRadius: 'var(--radius-md)',
                     padding: '6px 10px',

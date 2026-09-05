@@ -1,5 +1,5 @@
 import React from 'react';
-import { Dna, ShieldCheck, Zap, Cloud, GitBranch, Database, FileDown } from 'lucide-react';
+import { Dna, ShieldCheck, Zap, Cloud, GitBranch, Database, FileDown, Sun, Moon } from 'lucide-react';
 
 interface HeaderProps {
   score?: number;
@@ -10,6 +10,8 @@ interface HeaderProps {
   onScrollToJudge?: () => void;
   branchName?: string;
   repoSizeMb?: number;
+  theme?: 'light' | 'dark';
+  onToggleTheme?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -19,6 +21,8 @@ export const Header: React.FC<HeaderProps> = ({
   onExportSubmission,
   branchName = 'main',
   repoSizeMb = 0.84,
+  theme = 'dark',
+  onToggleTheme,
 }) => {
   return (
     <header
@@ -63,6 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
               <h1
+                className="brand-title"
                 style={{
                   fontSize: '1.25rem',
                   fontWeight: 800,
@@ -159,12 +164,37 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           )}
 
+          {/* Theme Toggle Button (Sun/Moon icon for Light & Dark Mode) */}
+          {onToggleTheme && (
+            <button
+              className="theme-toggle-btn"
+              onClick={onToggleTheme}
+              role="switch"
+              aria-checked={theme === 'light'}
+              aria-label={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+              title={theme === 'light' ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+              id="theme-toggle-btn"
+            >
+              {theme === 'light' ? (
+                <>
+                  <Moon size={15} color="#475569" aria-hidden="true" />
+                  <span>Dark</span>
+                </>
+              ) : (
+                <>
+                  <Sun size={15} color="#f59e0b" aria-hidden="true" />
+                  <span>Light</span>
+                </>
+              )}
+            </button>
+          )}
+
           <button
             className="btn btn-secondary"
             onClick={onOpenSecurity}
             aria-label="Open Security & Sanitization Sandbox"
           >
-            <ShieldCheck size={16} color="#00f5d4" aria-hidden="true" />
+            <ShieldCheck size={16} color="var(--base-a)" aria-hidden="true" />
             <span>Security &amp; CSP</span>
           </button>
 
