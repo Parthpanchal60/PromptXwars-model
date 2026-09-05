@@ -1,9 +1,16 @@
 import { Gene, RoadmapCard, JudgeEvaluation } from '../types';
 
 /**
- * Google Services Suite Adapters
+ * Google Services Suite Adapters & Environment Configuration
  * Provides both production Google Cloud API configurations and resilient client simulation
  */
+
+export const GOOGLE_CONFIG = {
+  firebaseApiKey: (import.meta.env.VITE_FIREBASE_API_KEY || import.meta.env.FIREBASE_API_KEY || 'AIzaSyMockFirebaseKey9834kdL0927xLKMnz982') as string,
+  sheetsApiKey: (import.meta.env.VITE_SHEETS_API_KEY || import.meta.env.SHEETS_API_KEY || 'AIzaSyMockSheetsKey11029348xLmQzP') as string,
+  visionApiKey: (import.meta.env.VITE_VISION_API_KEY || import.meta.env.VISION_API_KEY || 'AIzaSyMockVisionKey98721345vTqR') as string,
+  mapsApiKey: (import.meta.env.VITE_MAPS_API_KEY || import.meta.env.MAPS_API_KEY || 'AIzaSyDemoKeyForPrototypingAndDevelopment') as string,
+};
 
 export interface VisionAnalysisResult {
   fileName: string;

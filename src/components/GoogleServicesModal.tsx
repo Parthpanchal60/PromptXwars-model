@@ -6,7 +6,9 @@ import {
   VisionApiService,
   VisionAnalysisResult,
   HACKATHON_TEAM_NODES,
+  GOOGLE_CONFIG,
 } from '../utils/googleServices';
+import { maskApiKey } from '../utils/sanitizer';
 import {
   X,
   Cloud,
@@ -135,6 +137,37 @@ export const GoogleServicesModal: React.FC<GoogleServicesModalProps> = ({
           >
             <X size={18} />
           </button>
+        </div>
+
+        {/* Live Configured API Keys Status Banner */}
+        <div
+          style={{
+            background: 'rgba(7, 10, 19, 0.7)',
+            border: '1px solid var(--border-subtle)',
+            borderRadius: 'var(--radius-sm)',
+            padding: '8px 12px',
+            marginBottom: 16,
+            fontSize: '0.74rem',
+            fontFamily: 'var(--font-mono)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 8,
+            color: 'var(--text-muted)',
+          }}
+        >
+          <div>
+            <span style={{ color: '#00f5d4', fontWeight: 600 }}>Active API Keys: </span>
+            <span>Firebase: <strong style={{ color: '#f8fafc' }}>{maskApiKey(GOOGLE_CONFIG.firebaseApiKey)}</strong></span>
+            {' | '}
+            <span>Sheets: <strong style={{ color: '#f8fafc' }}>{maskApiKey(GOOGLE_CONFIG.sheetsApiKey)}</strong></span>
+            {' | '}
+            <span>Vision: <strong style={{ color: '#f8fafc' }}>{maskApiKey(GOOGLE_CONFIG.visionApiKey)}</strong></span>
+            {' | '}
+            <span>Maps: <strong style={{ color: '#f8fafc' }}>{maskApiKey(GOOGLE_CONFIG.mapsApiKey)}</strong></span>
+          </div>
+          <span className="badge badge-emerald">LOADED</span>
         </div>
 
         {/* Tabs Bar */}
