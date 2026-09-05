@@ -166,8 +166,14 @@ export function tailorProjectByProfile(
   );
 
   const tailoredStack = basePlan.techStack.map((item) => {
-    // Tailor backend/logic layer
-    if (item.layer.toLowerCase().includes('telemetry') || item.layer.toLowerCase().includes('core') || item.layer.toLowerCase().includes('algorithm')) {
+    if (
+      item.layer.toLowerCase().includes('telemetry') ||
+      item.layer.toLowerCase().includes('core') ||
+      item.layer.toLowerCase().includes('algorithm') ||
+      item.layer.toLowerCase().includes('engine') ||
+      item.layer.toLowerCase().includes('backend') ||
+      item.layer.toLowerCase().includes('service')
+    ) {
       if (isPythonFan && isMLFan) {
         return { layer: item.layer, tech: 'FastAPI + PyTorch Inference Microservice' };
       }

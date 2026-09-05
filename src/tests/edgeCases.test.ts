@@ -3,7 +3,6 @@ import {
   validateProjectInput,
   validateSkillInput,
   sanitizeSkills,
-  sanitizeInput,
   maskApiKey,
 } from '../utils/sanitizer';
 import {

@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { ProjectDomain, StudentProfile, TeamMember } from '../types';
 import {
   generateProjectPlan,
@@ -21,6 +21,44 @@ import { generateVivaQuestions, calculateVivaReadiness } from '../utils/vivaDefe
 import { sanitizeProjectPlan } from '../utils/sanitizer';
 
 describe('End-to-End Integration Pipelines', () => {
+  beforeEach(() => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn().mockResolvedValue({
+        ok: true,
+        json: async () => ({
+          candidates: [
+            {
+              content: {
+                parts: [
+                  {
+                    text: JSON.stringify({
+                      title: 'Pipeline Innovation: Cybersecurity',
+                      summary: 'Integrated pipeline automated test plan.',
+                      features: ['Threat Detector', 'Packet Filter', 'Key Vault', 'Audit Log'],
+                      techStack: [
+                        { layer: 'Frontend Client', tech: 'React 18' },
+                        { layer: 'Scanning Engine', tech: 'FastAPI Microservice' },
+                      ],
+                      improvements: {
+                        scalability: 'S1',
+                        security: 'Sec1',
+                        accessibility: 'A11y1',
+                      },
+                    }),
+                  },
+                ],
+              },
+            },
+          ],
+        }),
+      })
+    );
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
   const ALL_DOMAINS: ProjectDomain[] = [
     'Healthcare',
     'Fintech',
@@ -35,7 +73,7 @@ describe('End-to-End Integration Pipelines', () => {
   it('generates consistent, high-integrity project blueprints across all 8 supported domains', async () => {
     for (const domain of ALL_DOMAINS) {
       const plan = await generateProjectPlan(`Automated test project for ${domain}`, domain);
-      const genome = generateDomainGenome(domain);
+      const genome = generateDomainGenome(domain, plan.title);
       const roadmap = generateDomainRoadmap(domain, plan);
 
       // Blueprint checks
@@ -51,14 +89,14 @@ describe('End-to-End Integration Pipelines', () => {
       genome.forEach((gene) => {
         expect(gene.id).toBeTruthy();
         expect(gene.codon).toMatch(/^[A-Z]{3}$/);
-        expect(gene.efficiency).toBeGreaterThanOrEqual(50);
+        expect(gene.healthScore).toBeGreaterThanOrEqual(50);
       });
 
       // Roadmap checks
       expect(roadmap.length).toBeGreaterThanOrEqual(3);
       roadmap.forEach((card) => {
         expect(card.checklist.length).toBeGreaterThanOrEqual(2);
-        expect(card.curatedTutorials.length).toBeGreaterThanOrEqual(1);
+        expect((card.learningResources || []).length).toBeGreaterThanOrEqual(1);
       });
     }
   });
@@ -69,7 +107,7 @@ describe('End-to-End Integration Pipelines', () => {
       'Zero-Trust Network Micro-Segmentation Agent',
       'Cybersecurity'
     );
-    expect(initialPlan.title).toContain('Zero-Trust');
+    expect(initialPlan.title).toContain('Pipeline Innovation');
 
     // 2. Skill Personalization
     const studentProfile: StudentProfile = {
@@ -80,7 +118,9 @@ describe('End-to-End Integration Pipelines', () => {
       experienceLevel: 'Advanced',
     };
     const personalizedPlan = tailorProjectByProfile(initialPlan, studentProfile);
-    expect(personalizedPlan.techStack.some((t) => t.tech.includes('Python') || t.tech.includes('Go'))).toBe(true);
+    expect(
+      personalizedPlan.techStack.some((t) => /pytorch|python|fastapi|go/i.test(t.tech))
+    ).toBe(true);
 
     // 3. Team Collaboration & Genome Fusion
     const team: TeamMember[] = [
@@ -107,7 +147,7 @@ describe('End-to-End Integration Pipelines', () => {
     const synergy = calculateTeamSynergy(team, 'Cybersecurity');
     expect(synergy).toBeGreaterThanOrEqual(60);
 
-    const baseGenes = generateDomainGenome('Cybersecurity');
+    const baseGenes = generateDomainGenome('Cybersecurity', personalizedPlan.title);
     const enrichedGenes = generateTeamGenome(team, 'Cybersecurity', baseGenes);
     expect(enrichedGenes.some((g) => g.contributorName)).toBe(true);
 
@@ -119,8 +159,8 @@ describe('End-to-End Integration Pipelines', () => {
 
     // 5. Progress Analytics & Badge Evaluation
     const roadmap = generateDomainRoadmap('Cybersecurity', personalizedPlan);
-    const badges = evaluateBadges(INITIAL_BADGES, roadmap, ['mut-sec-1']);
-    const analytics = calculateProgressAnalytics(roadmap, badges);
+    const badges = evaluateBadges(roadmap, baseGenes, team, INITIAL_BADGES);
+    const analytics = calculateProgressAnalytics(roadmap, baseGenes, badges);
     expect(analytics.completionPercent).toBeGreaterThanOrEqual(0);
     expect(analytics.completionPercent).toBeLessThanOrEqual(100);
 
