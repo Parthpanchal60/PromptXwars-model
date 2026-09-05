@@ -34,6 +34,27 @@ export const GenomeVisualizer: React.FC<GenomeVisualizerProps> = ({
   const viewHeight = 260;
   const coords = calculateStrandCoordinates(genes.length, viewWidth, viewHeight, phaseOffset);
 
+  // Generate smooth bezier path through coordinate points for strand ribbons
+  const generateBackbonePath = (pts: Array<{ x: number; y: number }>) => {
+    if (pts.length < 2) return '';
+    let d = `M ${pts[0].x} ${pts[0].y}`;
+    for (let i = 0; i < pts.length - 1; i++) {
+      const p0 = pts[i];
+      const p1 = pts[i + 1];
+      const midX = (p0.x + p1.x) / 2;
+      const midY = (p0.y + p1.y) / 2;
+      d += ` Q ${p0.x} ${p0.y}, ${midX} ${midY}`;
+    }
+    const last = pts[pts.length - 1];
+    d += ` T ${last.x} ${last.y}`;
+    return d;
+  };
+
+  const strand1Points = coords.map((c) => ({ x: c.x, y: c.y1 }));
+  const strand2Points = coords.map((c) => ({ x: c.x, y: c.y2 }));
+  const strand1Path = generateBackbonePath(strand1Points);
+  const strand2Path = generateBackbonePath(strand2Points);
+
   // Category Color Mapper
   const getCategoryColor = (cat: Gene['category']) => {
     switch (cat) {
@@ -98,12 +119,16 @@ export const GenomeVisualizer: React.FC<GenomeVisualizerProps> = ({
         style={{
           width: '100%',
           overflowX: 'auto',
-          background: 'rgba(7, 10, 19, 0.6)',
+          background: 'rgba(7, 10, 19, 0.75)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
           borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--border-subtle)',
+          border: '1px solid rgba(0, 245, 212, 0.22)',
           padding: '12px 8px',
-          boxShadow: isMutating ? '0 0 25px rgba(0, 245, 212, 0.3)' : 'none',
-          transition: 'box-shadow 0.3s ease',
+          boxShadow: isMutating
+            ? '0 0 35px rgba(0, 245, 212, 0.4), inset 0 0 20px rgba(0, 245, 212, 0.15)'
+            : '0 8px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(0, 245, 212, 0.08)',
+          transition: 'box-shadow 0.3s ease, border-color 0.3s ease',
         }}
       >
         <svg
@@ -114,20 +139,59 @@ export const GenomeVisualizer: React.FC<GenomeVisualizerProps> = ({
         >
           <defs>
             <linearGradient id="backbone-grad-1" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#00f5d4" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#0ea5e9" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#a855f7" stopOpacity="0.8" />
+              <stop offset="0%" stopColor="#00f5d4" stopOpacity="0.95" />
+              <stop offset="50%" stopColor="#0ea5e9" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#a855f7" stopOpacity="0.95" />
             </linearGradient>
             <linearGradient id="backbone-grad-2" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#a855f7" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#f43f5e" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#00f5d4" stopOpacity="0.8" />
+              <stop offset="0%" stopColor="#a855f7" stopOpacity="0.95" />
+              <stop offset="50%" stopColor="#f43f5e" stopOpacity="0.95" />
+              <stop offset="100%" stopColor="#00f5d4" stopOpacity="0.95" />
             </linearGradient>
+            {/* Multi-stage bioluminescent glow filter */}
+            <filter id="helix-glow" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="5" result="glowWide" />
+              <feGaussianBlur stdDeviation="2" result="glowSharp" />
+              <feMerge>
+                <feMergeNode in="glowWide" />
+                <feMergeNode in="glowSharp" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
             <filter id="glow-filter" x="-20%" y="-20%" width="140%" height="140%">
-              <feGaussianBlur stdDeviation="3" result="blur" />
+              <feGaussianBlur stdDeviation="3.5" result="blur" />
               <feComposite in="SourceGraphic" in2="blur" operator="over" />
             </filter>
+            {/* Ambient Bio-Aura Background */}
+            <radialGradient id="strand-aura" cx="50%" cy="50%" r="65%">
+              <stop offset="0%" stopColor="rgba(0, 245, 212, 0.12)" />
+              <stop offset="50%" stopColor="rgba(168, 85, 247, 0.05)" />
+              <stop offset="100%" stopColor="transparent" />
+            </radialGradient>
           </defs>
+
+          {/* Ambient Bioluminescent Backdrop */}
+          <rect x="0" y="0" width={viewWidth} height={viewHeight} fill="url(#strand-aura)" rx="10" />
+
+          {/* Glowing Double-Helix Continuous Backbone Ribbons */}
+          <path
+            d={strand1Path}
+            fill="none"
+            stroke="url(#backbone-grad-1)"
+            strokeWidth={3.5}
+            strokeLinecap="round"
+            filter="url(#helix-glow)"
+            opacity={0.9}
+          />
+          <path
+            d={strand2Path}
+            fill="none"
+            stroke="url(#backbone-grad-2)"
+            strokeWidth={3.5}
+            strokeLinecap="round"
+            filter="url(#helix-glow)"
+            opacity={0.9}
+          />
 
           {/* Connective Base-Pair Hydrogen Rungs */}
           {coords.map((pt, idx) => {

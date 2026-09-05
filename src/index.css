@@ -59,7 +59,9 @@
 html, body {
   width: 100%;
   min-height: 100vh;
-  background-color: var(--bg-primary);
+  background-color: #070a14;
+  background-size: cover;
+  background-position: center;
   color: var(--text-primary);
   font-family: var(--font-sans);
   font-size: 15px;
@@ -67,11 +69,57 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  position: relative;
+}
+
+/* 
+ * Dual-Tone Amorphous Cloud Gradient Background
+ * Lower-Left: Deep blue fading into lighter sky/cyan tones
+ * Upper-Right: Warm pink fading into luminous soft cloud white
+ * Cloud-like, organic amorphous shapes evoking calm, focus, and harmony
+ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: -15%;
+  width: 130%;
+  height: 130%;
+  z-index: -2;
+  background-color: #070a14;
   background-image:
-    radial-gradient(ellipse 60% 40% at 50% -10%, rgba(0, 245, 212, 0.08), transparent 70%),
-    radial-gradient(ellipse 50% 50% at 85% 90%, rgba(168, 85, 247, 0.07), transparent 70%),
-    radial-gradient(ellipse 40% 40% at 10% 80%, rgba(14, 165, 233, 0.06), transparent 70%);
-  background-attachment: fixed;
+    /* Upper Right: Warm Pink fading into luminous soft cloud white */
+    radial-gradient(ellipse 70% 60% at 95% 6%, rgba(244, 63, 94, 0.38) 0%, rgba(251, 113, 133, 0.32) 22%, rgba(255, 228, 230, 0.25) 45%, rgba(255, 255, 255, 0.22) 62%, transparent 80%),
+    radial-gradient(ellipse 55% 50% at 84% 22%, rgba(244, 114, 182, 0.28) 0%, rgba(253, 164, 175, 0.18) 35%, rgba(255, 241, 242, 0.14) 52%, transparent 72%),
+    radial-gradient(ellipse 42% 38% at 72% 10%, rgba(251, 207, 232, 0.24) 0%, rgba(255, 255, 255, 0.16) 42%, transparent 68%),
+    /* Center Ambient Bio-Harmonic Bloom */
+    radial-gradient(ellipse 60% 50% at 52% 50%, rgba(168, 85, 247, 0.09) 0%, rgba(0, 245, 212, 0.05) 38%, transparent 70%),
+    /* Lower Left: Deep Blue fading into lighter cyan & sky tones */
+    radial-gradient(ellipse 80% 70% at 6% 94%, rgba(15, 32, 95, 0.58) 0%, rgba(29, 78, 216, 0.44) 22%, rgba(56, 189, 248, 0.28) 46%, rgba(14, 165, 233, 0.12) 68%, transparent 88%),
+    radial-gradient(ellipse 55% 55% at 20% 80%, rgba(30, 64, 175, 0.38) 0%, rgba(125, 211, 252, 0.2) 35%, transparent 70%),
+    radial-gradient(ellipse 46% 42% at 34% 92%, rgba(37, 99, 235, 0.32) 0%, rgba(186, 230, 253, 0.15) 42%, transparent 68%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: blur(48px);
+  pointer-events: none;
+  animation: ambient-cloud-drift 24s ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+/* Atmospheric Vignette Veil for WCAG AAA Text Contrast (>= 7:1) */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at 50% 50%, rgba(7, 10, 19, 0.28) 0%, rgba(7, 10, 19, 0.68) 100%);
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body::before {
+    animation: none;
+  }
 }
 
 /* Focus Visible for WCAG AAA compliance */
@@ -102,22 +150,41 @@ code, pre, .font-mono {
   font-family: var(--font-mono);
 }
 
-/* Glass Card */
+/* Glass Panel Overlay */
 .glass-panel {
-  background: var(--bg-card);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid var(--border-subtle);
+  background: rgba(13, 19, 34, 0.82);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: var(--radius-md);
-  box-shadow: var(--glass-shadow);
+  box-shadow: 0 12px 36px -4px rgba(0, 0, 0, 0.55), 0 0 24px rgba(0, 245, 212, 0.04);
   transition: all var(--transition-normal);
 }
 
 .glass-panel:hover {
-  border-color: rgba(255, 255, 255, 0.15);
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 16px 42px -4px rgba(0, 0, 0, 0.65), 0 0 28px rgba(0, 245, 212, 0.08);
 }
 
 /* Keyframes */
+@keyframes ambient-cloud-drift {
+  0% {
+    transform: scale(1) translate3d(0, 0, 0) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.04) translate3d(2%, -1.2%, 0) rotate(0.6deg);
+  }
+  50% {
+    transform: scale(1.08) translate3d(-1.2%, -2.2%, 0) rotate(-0.5deg);
+  }
+  75% {
+    transform: scale(1.03) translate3d(-2%, 1.4%, 0) rotate(-0.8deg);
+  }
+  100% {
+    transform: scale(1.06) translate3d(1.5%, 1.2%, 0) rotate(0.4deg);
+  }
+}
+
 @keyframes pulse-glow {
   0%, 100% {
     opacity: 0.8;
@@ -270,6 +337,25 @@ code, pre, .font-mono {
 @media (max-width: 1024px) {
   .grid-cols-2 {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .app-container {
+    padding: 0 12px 40px 12px;
+  }
+
+  body::before {
+    inset: -20%;
+    width: 140%;
+    height: 140%;
+    filter: blur(36px);
+    background-size: cover;
+    background-position: center;
+  }
+
+  .glass-panel {
+    padding: 16px !important;
   }
 }
 

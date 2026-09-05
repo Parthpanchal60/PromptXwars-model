@@ -111,7 +111,9 @@ export const MentorRoadmap: React.FC<MentorRoadmapProps> = ({
             <div
               key={sprintId}
               style={{
-                background: 'rgba(7, 10, 19, 0.65)',
+                background: 'rgba(7, 10, 19, 0.75)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
                 border: '1px solid var(--border-subtle)',
                 borderRadius: 'var(--radius-md)',
                 padding: 14,
@@ -141,14 +143,16 @@ export const MentorRoadmap: React.FC<MentorRoadmapProps> = ({
                     <div
                       key={card.id}
                       style={{
-                        background: 'rgba(15, 23, 42, 0.75)',
-                        border: '1px solid var(--border-subtle)',
+                        background: 'rgba(15, 23, 42, 0.82)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.08)',
                         borderRadius: 'var(--radius-sm)',
                         padding: 12,
                         display: 'flex',
                         flexDirection: 'column',
                         gap: 10,
-                        transition: 'transform 0.15s ease',
+                        transition: 'transform 0.15s ease, border-color 0.2s ease',
                       }}
                     >
                       {/* Card Tags & Status Selector */}
