@@ -69,9 +69,10 @@ const DEFAULT_INITIAL_PLAN: ProjectPlan = {
   ],
   techStack: [
     { layer: 'Frontend Client', tech: 'React 18 + Vite SPA with high-contrast UI' },
-    { layer: 'Telemetry Layer', tech: 'WebSockets & Reactive State Fabric' },
-    { layer: 'Data Storage', tech: 'Encrypted Document DB & Cloud Storage' },
-    { layer: 'Security & Auth', tech: 'Multi-Factor Auth & End-to-End Encryption' },
+    { layer: 'Backend Service', tech: 'Python 3.11 + FastAPI Asynchronous Telemetry Server' },
+    { layer: 'Telemetry Layer', tech: 'WebSockets & Real-Time Reactive State Fabric' },
+    { layer: 'Encrypted Vault', tech: 'HIPAA-Aligned Encrypted Health Data Vault & Document DB' },
+    { layer: 'Security & Auth', tech: 'Zero-Trust JWT Auth & End-to-End Encryption' },
   ],
   devSteps: [
     'Sprint 0: Establish encrypted schema & zero-leak authentication guardrails',
