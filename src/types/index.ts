@@ -105,3 +105,36 @@ export interface GoogleServiceConnection {
   lastSync: string;
   details: string;
 }
+
+export type ProjectDomain =
+  | 'Healthcare'
+  | 'Fintech'
+  | 'Education'
+  | 'Logistics'
+  | 'Smart Cities'
+  | 'Cybersecurity'
+  | 'Sustainability'
+  | 'Developer Tools';
+
+export interface ProjectPlan {
+  title: string;
+  domain: ProjectDomain;
+  summary: string;
+  features: string[];
+  techStack: Array<{ layer: string; tech: string }>;
+  devSteps: string[];
+  improvements: {
+    scalability: string;
+    security: string;
+    accessibility: string;
+  };
+  testingTips: string[];
+}
+
+export interface ChatMessage {
+  id: string;
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp: string;
+}
+

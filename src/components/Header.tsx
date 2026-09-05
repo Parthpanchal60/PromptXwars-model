@@ -1,22 +1,20 @@
 import React from 'react';
-import { Dna, ShieldCheck, Zap, Cloud, Award, GitBranch, Database } from 'lucide-react';
+import { Dna, ShieldCheck, Zap, Cloud, GitBranch, Database } from 'lucide-react';
 
 interface HeaderProps {
-  score: number;
+  score?: number;
   activeMutationsCount: number;
   onOpenGoogleServices: () => void;
   onOpenSecurity: () => void;
-  onScrollToJudge: () => void;
+  onScrollToJudge?: () => void;
   branchName?: string;
   repoSizeMb?: number;
 }
 
 export const Header: React.FC<HeaderProps> = ({
-  score,
   activeMutationsCount,
   onOpenGoogleServices,
   onOpenSecurity,
-  onScrollToJudge,
   branchName = 'main',
   repoSizeMb = 0.84,
 }) => {
@@ -142,35 +140,7 @@ export const Header: React.FC<HeaderProps> = ({
             <span style={{ color: '#c084fc', fontWeight: 700 }}>{activeMutationsCount} Active</span>
           </div>
 
-          {/* Benchmark Score Badge */}
-          <button
-            onClick={onScrollToJudge}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              background: 'linear-gradient(135deg, rgba(0, 245, 212, 0.15) 0%, rgba(14, 165, 233, 0.15) 100%)',
-              border: '1px solid rgba(0, 245, 212, 0.4)',
-              padding: '6px 14px',
-              borderRadius: 'var(--radius-sm)',
-              cursor: 'pointer',
-              color: 'var(--text-primary)',
-            }}
-            aria-label={`Judge score ${score} out of 100. Click to view evaluation`}
-          >
-            <Award size={16} color="#00f5d4" aria-hidden="true" />
-            <span style={{ fontSize: '0.82rem', color: 'var(--text-secondary)' }}>Score:</span>
-            <span
-              style={{
-                fontSize: '0.98rem',
-                fontWeight: 800,
-                color: '#00f5d4',
-                fontFamily: 'var(--font-mono)',
-              }}
-            >
-              {score} / 100
-            </span>
-          </button>
+
         </div>
 
         {/* Global Action Modals */}
