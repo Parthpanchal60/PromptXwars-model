@@ -17,6 +17,7 @@ export interface Gene {
   description: string;
   status: GeneStatus;
   healthScore: number; // 0-100
+  contributorName?: string;
   googleService?: 'Firebase' | 'Cloud Vision' | 'Google Sheets' | 'Google Maps';
   details: {
     tech: string;
@@ -56,6 +57,15 @@ export interface ChecklistItem {
   completed: boolean;
 }
 
+export interface LearningResource {
+  id: string;
+  title: string;
+  platform: 'YouTube' | 'NPTEL' | 'SWAYAM' | 'Docs';
+  url: string;
+  duration: string;
+  targetSkill: string;
+}
+
 export interface RoadmapCard {
   id: string;
   sprint: SprintId;
@@ -68,6 +78,7 @@ export interface RoadmapCard {
   a11yCheckpoint?: string;
   securityCheckpoint?: string;
   checklist: ChecklistItem[];
+  learningResources?: LearningResource[];
 }
 
 export interface JudgeRubricItem {
@@ -138,3 +149,92 @@ export interface ChatMessage {
   timestamp: string;
 }
 
+/**
+ * Student Personalization Profile
+ */
+export interface StudentProfile {
+  name: string;
+  skills: string[];
+  interests: string[];
+  preferredLanguages: string[];
+  experienceLevel: 'Beginner' | 'Intermediate' | 'Advanced';
+}
+
+/**
+ * Team Collaboration Member
+ */
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  skills: string[];
+  avatarColor: string;
+}
+
+/**
+ * Team Genome State
+ */
+export interface TeamGenomeState {
+  members: TeamMember[];
+  combinedSkills: string[];
+  synergyScore: number; // 0-100%
+}
+
+/**
+ * Engineering Feasibility Report
+ */
+export interface FeasibilityReport {
+  feasibilityScore: number; // 0-100 (Internal Engineering Metric, NOT hackathon AI score)
+  stackCompatibilityScore: number; // 0-100%
+  estimatedBuildTimeHours: number;
+  sprintFeasibility: 'High' | 'Moderate' | 'Challenging';
+  resourceRequirements: {
+    compute: string;
+    apis: string[];
+    storage: string;
+    costEstimate: string;
+  };
+  technicalRisks: string[];
+  recommendations: string[];
+}
+
+/**
+ * Gamified Mentor Reward Badge
+ */
+export interface GamifiedBadge {
+  id: string;
+  title: string;
+  description: string;
+  category: 'Security' | 'Accessibility' | 'Performance' | 'Collaboration' | 'Architecture';
+  icon: string;
+  unlocked: boolean;
+  unlockedAt?: string;
+  criteria: string;
+}
+
+/**
+ * Progress Analytics Snapshot
+ */
+export interface ProgressAnalytics {
+  completionPercent: number; // 0-100%
+  securityCompliancePercent: number; // 0-100%
+  accessibilityReadinessPercent: number; // 0-100%
+  currentPhase: 'Idea' | 'Prototype' | 'Hardening' | 'Submission Ready';
+  completedTasks: number;
+  totalTasks: number;
+  badgesUnlockedCount: number;
+  totalBadgesCount: number;
+}
+
+/**
+ * Idea Evolution Mutation Snapshot
+ */
+export interface IdeaMutationSnapshot {
+  id: string;
+  version: number;
+  timestamp: string;
+  title: string;
+  summary: string;
+  source: 'initial' | 'profile_tuned' | 'team_merged' | 'feasibility_hardened';
+  tag: string;
+}

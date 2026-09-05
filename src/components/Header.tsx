@@ -1,11 +1,12 @@
 import React from 'react';
-import { Dna, ShieldCheck, Zap, Cloud, GitBranch, Database } from 'lucide-react';
+import { Dna, ShieldCheck, Zap, Cloud, GitBranch, Database, FileDown } from 'lucide-react';
 
 interface HeaderProps {
   score?: number;
   activeMutationsCount: number;
   onOpenGoogleServices: () => void;
   onOpenSecurity: () => void;
+  onExportSubmission?: () => void;
   onScrollToJudge?: () => void;
   branchName?: string;
   repoSizeMb?: number;
@@ -15,6 +16,7 @@ export const Header: React.FC<HeaderProps> = ({
   activeMutationsCount,
   onOpenGoogleServices,
   onOpenSecurity,
+  onExportSubmission,
   branchName = 'main',
   repoSizeMb = 0.84,
 }) => {
@@ -143,8 +145,20 @@ export const Header: React.FC<HeaderProps> = ({
 
         </div>
 
-        {/* Global Action Modals */}
+        {/* Global Action Modals & Export */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          {onExportSubmission && (
+            <button
+              className="btn btn-primary"
+              onClick={onExportSubmission}
+              style={{ padding: '7px 14px', fontSize: '0.82rem' }}
+              aria-label="Export Hackathon Judge Submission Package"
+            >
+              <FileDown size={15} />
+              <span>Export Submission</span>
+            </button>
+          )}
+
           <button
             className="btn btn-secondary"
             onClick={onOpenSecurity}

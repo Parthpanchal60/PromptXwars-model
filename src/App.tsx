@@ -1,5 +1,15 @@
 import React, { useState, useMemo } from 'react';
-import { Gene, Mutation, RoadmapCard, ProjectDomain, ProjectPlan } from './types';
+import {
+  Gene,
+  Mutation,
+  RoadmapCard,
+  ProjectDomain,
+  ProjectPlan,
+  StudentProfile,
+  TeamMember,
+  IdeaMutationSnapshot,
+  GamifiedBadge,
+} from './types';
 import { AVAILABLE_MUTATIONS, TIMELINE_STAGES, calculateGenomeFitness } from './utils/genomeEngine';
 import { evaluateProjectRubric } from './utils/rubricEvaluator';
 import { GoogleSheetsService } from './utils/googleServices';
@@ -9,15 +19,36 @@ import {
   generateDomainGenome,
   generateDomainRoadmap,
 } from './utils/projectGenerator';
+import {
+  DEFAULT_STUDENT_PROFILE,
+  tailorProjectByProfile,
+} from './utils/personalizationEngine';
+import {
+  INITIAL_TEAM_MEMBERS,
+  generateTeamGenome,
+} from './utils/teamCollaboration';
+import { validateFeasibility } from './utils/feasibilityValidator';
+import {
+  INITIAL_BADGES,
+  evaluateBadges,
+  calculateProgressAnalytics,
+} from './utils/analyticsEngine';
+import { downloadSubmissionMarkdown } from './utils/submissionExporter';
 
 import { Header } from './components/Header';
+import { PersonalizationProfile } from './components/PersonalizationProfile';
+import { TeamGenomeHub } from './components/TeamGenomeHub';
 import { IdeaDomainInput } from './components/IdeaDomainInput';
 import { ProjectInfoCards } from './components/ProjectInfoCards';
+import { FeasibilityPanel } from './components/FeasibilityPanel';
+import { ProgressAnalyticsDashboard } from './components/ProgressAnalyticsDashboard';
+import { IdeaEvolutionTracker } from './components/IdeaEvolutionTracker';
 import { GenomeVisualizer } from './components/GenomeVisualizer';
 import { MutationEngine } from './components/MutationEngine';
 import { MentorRoadmap } from './components/MentorRoadmap';
 import { JudgeMode } from './components/JudgeMode';
 import { EvolutionTimeline } from './components/EvolutionTimeline';
+import { EthicalAIPanel } from './components/EthicalAIPanel';
 import { ChatAssistant } from './components/ChatAssistant';
 import { GoogleServicesModal } from './components/GoogleServicesModal';
 import { SecurityPanel } from './components/SecurityPanel';
@@ -60,16 +91,58 @@ const DEFAULT_INITIAL_PLAN: ProjectPlan = {
   ],
 };
 
+const INITIAL_IDEA_HISTORY: IdeaMutationSnapshot[] = [
+  {
+    id: 'snap-1',
+    version: 1,
+    timestamp: 'Phase 0: Genesis',
+    title: 'PulseGuard Telemetry Hub',
+    summary: 'Initial raw idea: Patient vitals & clinical queue.',
+    source: 'initial',
+    tag: 'Raw Concept',
+  },
+  {
+    id: 'snap-2',
+    version: 2,
+    timestamp: 'Phase 1: Profile Alignment',
+    title: 'PulseGuard: TypeScript + FastAPI Triage',
+    summary: 'Tailored with Python ML and React high-contrast design tokens.',
+    source: 'profile_tuned',
+    tag: 'Profile Tailored',
+  },
+  {
+    id: 'snap-3',
+    version: 3,
+    timestamp: 'Phase 2: Team Fusion',
+    title: 'PulseGuard Team Genome',
+    summary: 'Merged skills: Full-Stack + PyTorch Data Pipelines + Cloud Security.',
+    source: 'team_merged',
+    tag: 'Team Genome Fusion',
+  },
+];
+
 /**
  * Main Application Component for Capstone Forge / Genome Mentor.
  * Integrates Idea & Domain input, dynamic multi-tool project generation,
- * interactive project genome helix, sprint roadmap, and persistent AI Mentor chatbox.
+ * student personalization, team collaboration, technical feasibility,
+ * progress analytics, idea evolution tracker, genome strand, and mentor chatbox.
  */
 export const App: React.FC = () => {
+  // Student Profile State
+  const [studentProfile, setStudentProfile] = useState<StudentProfile>(DEFAULT_STUDENT_PROFILE);
+
+  // Team Collaboration State
+  const [teamMembers, setTeamMembers] = useState<TeamMember[]>(INITIAL_TEAM_MEMBERS);
+
   // Idea & Domain State
   const [selectedDomain, setSelectedDomain] = useState<ProjectDomain>('Healthcare');
-  const [projectPlan, setProjectPlan] = useState<ProjectPlan>(DEFAULT_INITIAL_PLAN);
+  const [projectPlan, setProjectPlan] = useState<ProjectPlan>(() =>
+    tailorProjectByProfile(DEFAULT_INITIAL_PLAN, DEFAULT_STUDENT_PROFILE)
+  );
   const [isGenerating, setIsGenerating] = useState(false);
+
+  // Idea Evolution History State
+  const [ideaHistory, setIdeaHistory] = useState<IdeaMutationSnapshot[]>(INITIAL_IDEA_HISTORY);
 
   // Project Title State
   const [projectName, setProjectName] = useState(DEFAULT_INITIAL_PLAN.title);
@@ -77,7 +150,11 @@ export const App: React.FC = () => {
 
   // Genome & Mutations State
   const [genes, setGenes] = useState<Gene[]>(() =>
-    generateDomainGenome('Healthcare', DEFAULT_INITIAL_PLAN.title)
+    generateTeamGenome(
+      INITIAL_TEAM_MEMBERS,
+      'Healthcare',
+      generateDomainGenome('Healthcare', DEFAULT_INITIAL_PLAN.title)
+    )
   );
   const [mutations, setMutations] = useState<Mutation[]>(AVAILABLE_MUTATIONS);
   const [selectedGeneId, setSelectedGeneId] = useState<string>(genes[0]?.id || 'gene-arch-1');
@@ -91,11 +168,14 @@ export const App: React.FC = () => {
     generateDomainRoadmap('Healthcare', DEFAULT_INITIAL_PLAN)
   );
 
+  // Gamified Badges State
+  const [badges, setBadges] = useState<GamifiedBadge[]>(INITIAL_BADGES);
+
   // Modals
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
   const [isSecurityModalOpen, setIsSecurityModalOpen] = useState(false);
 
-  // Live Calculations (Internal Benchmark Engine)
+  // Live Calculations (Internal Benchmark & Analytics Engines)
   const activeMutationsCount = useMemo(
     () => mutations.filter((m) => m.applied).length,
     [mutations]
@@ -111,26 +191,132 @@ export const App: React.FC = () => {
     [activeMutationsCount, timelineIndex, projectInputError]
   );
 
+  const feasibilityReport = useMemo(
+    () => validateFeasibility(projectPlan, teamMembers.length),
+    [projectPlan, teamMembers.length]
+  );
+
+  const progressAnalytics = useMemo(
+    () => calculateProgressAnalytics(roadmapCards, genes, badges),
+    [roadmapCards, genes, badges]
+  );
+
   /**
    * Generates tailored guidance when a student enters an idea and selects a domain.
    */
   const handleGenerateGuidance = async (idea: string, domain: ProjectDomain) => {
     setIsGenerating(true);
     try {
-      const newPlan = await generateProjectPlan(idea, domain);
-      const newGenes = generateDomainGenome(domain, newPlan.title);
-      const newRoadmap = generateDomainRoadmap(domain, newPlan);
+      const basePlan = await generateProjectPlan(idea, domain);
+      const tailoredPlan = tailorProjectByProfile(basePlan, studentProfile);
+      const baseGenes = generateDomainGenome(domain, tailoredPlan.title);
+      const teamGenes = generateTeamGenome(teamMembers, domain, baseGenes);
+      const newRoadmap = generateDomainRoadmap(domain, tailoredPlan);
 
       setSelectedDomain(domain);
-      setProjectPlan(newPlan);
-      setProjectName(newPlan.title);
-      setGenes(newGenes);
+      setProjectPlan(tailoredPlan);
+      setProjectName(tailoredPlan.title);
+      setGenes(teamGenes);
       setRoadmapCards(newRoadmap);
-      setSelectedGeneId(newGenes[0]?.id || 'gene-arch-1');
+      setSelectedGeneId(teamGenes[0]?.id || 'gene-arch-1');
       setTimelineIndex(4);
+
+      // Record in Idea Evolution History
+      setIdeaHistory((prev) => [
+        ...prev,
+        {
+          id: `snap-${Date.now()}`,
+          version: prev.length + 1,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          title: tailoredPlan.title,
+          summary: tailoredPlan.summary,
+          source: 'initial',
+          tag: `${domain} Blueprint`,
+        },
+      ]);
     } finally {
       setIsGenerating(false);
     }
+  };
+
+  /**
+   * Applies the current student profile to the active project plan.
+   */
+  const handleApplyProfile = () => {
+    const tailored = tailorProjectByProfile(projectPlan, studentProfile);
+    setProjectPlan(tailored);
+    setProjectName(tailored.title);
+
+    setIdeaHistory((prev) => [
+      ...prev,
+      {
+        id: `snap-${Date.now()}`,
+        version: prev.length + 1,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        title: tailored.title,
+        summary: `Personalized for ${studentProfile.name} (${studentProfile.skills.slice(0, 3).join(', ')})`,
+        source: 'profile_tuned',
+        tag: 'Profile Tailoring',
+      },
+    ]);
+  };
+
+  /**
+   * Adds a teammate and re-evaluates team synergy & badges.
+   */
+  const handleAddTeamMember = (newMember: TeamMember) => {
+    setTeamMembers((prev) => {
+      const updated = [...prev, newMember];
+      setBadges((currentBadges) => evaluateBadges(roadmapCards, genes, updated, currentBadges));
+      return updated;
+    });
+  };
+
+  /**
+   * Removes a teammate.
+   */
+  const handleRemoveTeamMember = (memberId: string) => {
+    setTeamMembers((prev) => {
+      const updated = prev.filter((m) => m.id !== memberId);
+      setBadges((currentBadges) => evaluateBadges(roadmapCards, genes, updated, currentBadges));
+      return updated;
+    });
+  };
+
+  /**
+   * Synthesizes the Team Genome by assigning team attribution to codons.
+   */
+  const handleSynthesizeTeamGenome = () => {
+    const teamGenes = generateTeamGenome(teamMembers, selectedDomain, genes);
+    setGenes(teamGenes);
+
+    setIdeaHistory((prev) => [
+      ...prev,
+      {
+        id: `snap-${Date.now()}`,
+        version: prev.length + 1,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        title: `${projectName} (Team Genome)`,
+        summary: `Co-engineered by ${teamMembers.map((m) => m.name).join(', ')}`,
+        source: 'team_merged',
+        tag: 'Team Fusion',
+      },
+    ]);
+
+    setBadges((curr) => evaluateBadges(roadmapCards, teamGenes, teamMembers, curr));
+  };
+
+  /**
+   * One-click download of the judge-ready Hackathon submission package.
+   */
+  const handleExportSubmission = () => {
+    downloadSubmissionMarkdown(
+      projectPlan,
+      feasibilityReport,
+      progressAnalytics,
+      teamMembers,
+      roadmapCards
+    );
   };
 
   /**
@@ -214,8 +400,8 @@ export const App: React.FC = () => {
    * Roadmap Checkbox Toggle
    */
   const handleToggleChecklistItem = (cardId: string, itemId: string) => {
-    setRoadmapCards((prev) =>
-      prev.map((c) => {
+    setRoadmapCards((prev) => {
+      const updated = prev.map((c) => {
         if (c.id !== cardId) return c;
         const updatedChecklist = c.checklist.map((item) =>
           item.id === itemId ? { ...item, completed: !item.completed } : item
@@ -226,8 +412,12 @@ export const App: React.FC = () => {
           checklist: updatedChecklist,
           status: allCompleted ? 'verified' : c.status,
         };
-      })
-    );
+      });
+
+      // Re-evaluate badge unlocks
+      setBadges((currentBadges) => evaluateBadges(updated, genes, teamMembers, currentBadges));
+      return updated;
+    });
   };
 
   /**
@@ -241,11 +431,12 @@ export const App: React.FC = () => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Header - Score badge hidden from UI per requirements */}
+      {/* Header with Export Submission action */}
       <Header
         activeMutationsCount={activeMutationsCount}
         onOpenGoogleServices={() => setIsGoogleModalOpen(true)}
         onOpenSecurity={() => setIsSecurityModalOpen(true)}
+        onExportSubmission={handleExportSubmission}
         branchName="main"
         repoSizeMb={0.84}
       />
@@ -260,14 +451,42 @@ export const App: React.FC = () => {
           gap: 28,
         }}
       >
-        {/* 1. Student Idea Input & Domain Selection */}
+        {/* 1. Student Personalization Profile */}
+        <PersonalizationProfile
+          profile={studentProfile}
+          onUpdateProfile={setStudentProfile}
+          onApplyProfile={handleApplyProfile}
+        />
+
+        {/* 2. Team Genome Collaboration Hub */}
+        <TeamGenomeHub
+          members={teamMembers}
+          domain={selectedDomain}
+          onAddMember={handleAddTeamMember}
+          onRemoveMember={handleRemoveTeamMember}
+          onSynthesizeTeamGenome={handleSynthesizeTeamGenome}
+        />
+
+        {/* 3. Student Idea Input & Domain Selection */}
         <IdeaDomainInput
           onGenerate={handleGenerateGuidance}
           isGenerating={isGenerating}
         />
 
-        {/* 2. Structured Project Guidance Cards (Features, Stack, Dev Steps, Improvements, Testing) */}
+        {/* 4. Structured Project Guidance Blueprint Cards */}
         <ProjectInfoCards plan={projectPlan} />
+
+        {/* 5. Engineering Feasibility Validator Panel */}
+        <FeasibilityPanel report={feasibilityReport} />
+
+        {/* 6. Progress Analytics Dashboard & Gamified Badges */}
+        <ProgressAnalyticsDashboard
+          analytics={progressAnalytics}
+          badges={badges}
+        />
+
+        {/* 7. Idea Mutation & Evolution Timeline */}
+        <IdeaEvolutionTracker history={ideaHistory} />
 
         {/* Project Identifier Bar */}
         <div
@@ -345,14 +564,14 @@ export const App: React.FC = () => {
           </div>
         </div>
 
-        {/* 3. Project Evolution Timeline */}
+        {/* 8. Project Evolution Timeline Slider */}
         <EvolutionTimeline
           stages={TIMELINE_STAGES}
           currentStageIndex={timelineIndex}
           onSelectStage={handleSelectTimelineStage}
         />
 
-        {/* 4. 2-Column Split: Genome Visualizer & Mutation Engine vs. Mentor Roadmap */}
+        {/* 9. 2-Column Split: Genome Visualizer & Mutation Engine vs. Mentor Roadmap */}
         <div className="grid-cols-2">
           {/* Left Column: Genome Strand & Codon Mutator */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
@@ -370,7 +589,7 @@ export const App: React.FC = () => {
             />
           </div>
 
-          {/* Right Column: Trello-style Mentor Roadmap */}
+          {/* Right Column: Trello-style Mentor Roadmap with Curated Learning Paths */}
           <div>
             <MentorRoadmap
               cards={roadmapCards}
@@ -382,6 +601,9 @@ export const App: React.FC = () => {
             />
           </div>
         </div>
+
+        {/* 10. Ethical AI Transparency & Privacy Assurance Panel */}
+        <EthicalAIPanel />
 
         {/*
           Internal Hackathon Evaluation Harness:
@@ -424,7 +646,7 @@ export const App: React.FC = () => {
           }}
         >
           <div>
-            Genome Mentor 🧬 | Student Project Guidance &amp; Architecture Engine
+            Genome Mentor 🧬 | Personalized Student Guidance &amp; Architecture Engine
           </div>
           <div style={{ display: 'flex', gap: 16 }}>
             <span>
@@ -440,7 +662,7 @@ export const App: React.FC = () => {
         </div>
       </footer>
 
-      {/* 5. Continuous AI Mentorship Chatbox (Dockable side-panel) */}
+      {/* 11. Voice-Enabled Continuous AI Mentorship Chatbox */}
       <ChatAssistant
         currentProject={projectName}
         currentDomain={selectedDomain}

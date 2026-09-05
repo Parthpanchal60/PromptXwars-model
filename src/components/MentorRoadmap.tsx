@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { RoadmapCard, SprintId, GeneCategory } from '../types';
-import { Kanban, CheckSquare, Square, Shield, Eye, Download, Filter, Tag } from 'lucide-react';
+import { Kanban, CheckSquare, Square, Shield, Eye, Download, Filter, Tag, BookOpen, ExternalLink } from 'lucide-react';
 
 interface MentorRoadmapProps {
   cards: RoadmapCard[];
@@ -293,6 +293,75 @@ export const MentorRoadmap: React.FC<MentorRoadmapProps> = ({
                           ))}
                         </div>
                       </div>
+
+                      {/* Curated Learning Paths (YouTube, NPTEL, SWAYAM) */}
+                      {card.learningResources && card.learningResources.length > 0 && (
+                        <div style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)', paddingTop: 8, marginTop: 8 }}>
+                          <div
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: 5,
+                              marginBottom: 6,
+                              fontSize: '0.7rem',
+                              color: '#38bdf8',
+                              fontWeight: 600,
+                            }}
+                          >
+                            <BookOpen size={11} />
+                            <span>CURATED TUTORIALS</span>
+                          </div>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                            {card.learningResources.map((res) => (
+                              <a
+                                key={res.id}
+                                href={res.url}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                style={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'space-between',
+                                  background: 'rgba(56, 189, 248, 0.06)',
+                                  border: '1px solid rgba(56, 189, 248, 0.18)',
+                                  padding: '4px 8px',
+                                  borderRadius: 4,
+                                  color: 'var(--text-secondary)',
+                                  fontSize: '0.72rem',
+                                  textDecoration: 'none',
+                                }}
+                                aria-label={`Open tutorial ${res.title} on ${res.platform} (opens in new tab)`}
+                              >
+                                <span
+                                  style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: 4,
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis',
+                                    whiteSpace: 'nowrap',
+                                  }}
+                                >
+                                  <strong
+                                    style={{
+                                      color:
+                                        res.platform === 'YouTube'
+                                          ? '#f43f5e'
+                                          : res.platform === 'NPTEL'
+                                          ? '#f59e0b'
+                                          : '#38bdf8',
+                                    }}
+                                  >
+                                    [{res.platform}]
+                                  </strong>{' '}
+                                  {res.title}
+                                </span>
+                                <ExternalLink size={11} style={{ flexShrink: 0, marginLeft: 4 }} />
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
                     </div>
                   );
                 })

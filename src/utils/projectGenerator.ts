@@ -7,6 +7,7 @@
 
 import { Gene, RoadmapCard, ProjectDomain, ProjectPlan } from '../types';
 import { GOOGLE_CONFIG } from './googleServices';
+import { CURATED_LEARNING_RESOURCES } from './personalizationEngine';
 
 /**
  * Domain-specific architectural templates for instant, reliable fallback synthesis
@@ -543,6 +544,10 @@ export function generateDomainRoadmap(domain: ProjectDomain, plan: ProjectPlan):
         { id: 'c2', text: 'Single main branch discipline verified', completed: true },
         { id: 'c3', text: 'Establish modular TypeScript contracts', completed: true },
       ],
+      learningResources: [
+        CURATED_LEARNING_RESOURCES.TypeScript[0],
+        CURATED_LEARNING_RESOURCES.TypeScript[1],
+      ],
     },
     {
       id: 'card-s1-1',
@@ -558,6 +563,10 @@ export function generateDomainRoadmap(domain: ProjectDomain, plan: ProjectPlan):
         { id: 'c4', text: `Build ${plan.features[0] || 'primary feature'}`, completed: true },
         { id: 'c5', text: `Scaffold ${plan.features[1] || 'secondary workflow'}`, completed: true },
         { id: 'c6', text: 'Validate sub-millisecond state updates', completed: true },
+      ],
+      learningResources: [
+        CURATED_LEARNING_RESOURCES.Python[0],
+        CURATED_LEARNING_RESOURCES.Firebase[0],
       ],
     },
     {
@@ -575,6 +584,10 @@ export function generateDomainRoadmap(domain: ProjectDomain, plan: ProjectPlan):
         { id: 'c8', text: 'Mask secret tokens in telemetry displays', completed: true },
         { id: 'c9', text: 'Enable tabular data export and cloud sync', completed: true },
       ],
+      learningResources: [
+        CURATED_LEARNING_RESOURCES.Security[0],
+        CURATED_LEARNING_RESOURCES.Security[1],
+      ],
     },
     {
       id: 'card-s3-1',
@@ -590,6 +603,10 @@ export function generateDomainRoadmap(domain: ProjectDomain, plan: ProjectPlan):
         { id: 'c10', text: 'Run 100% passing automated test suite', completed: true },
         { id: 'c11', text: 'Verify repository size remains strictly under 10MB', completed: true },
         { id: 'c12', text: 'Confirm zero-error production build', completed: true },
+      ],
+      learningResources: [
+        CURATED_LEARNING_RESOURCES.Accessibility[0],
+        CURATED_LEARNING_RESOURCES.Accessibility[1],
       ],
     },
   ];

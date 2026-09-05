@@ -12,6 +12,8 @@ import {
   HelpCircle,
   Minimize2,
   Maximize2,
+  Mic,
+  MicOff,
 } from 'lucide-react';
 
 /**
@@ -70,9 +72,69 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
   const [inputValue, setInputValue] = useState('');
   const [isTyping, setIsTyping] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [speechError, setSpeechError] = useState<string | null>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const recognitionRef = useRef<any>(null);
+
+  const toggleVoiceInput = () => {
+    if (typeof window === 'undefined') return;
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      setSpeechError('Voice input not supported in this browser.');
+      setTimeout(() => setSpeechError(null), 3500);
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current?.stop();
+      setIsListening(false);
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.continuous = false;
+      recognition.interimResults = false;
+      recognition.lang = 'en-US';
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        setSpeechError(null);
+      };
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      recognition.onresult = (event: any) => {
+        const transcript = event.results?.[0]?.[0]?.transcript;
+        if (transcript) {
+          setInputValue((prev) => (prev ? `${prev} ${transcript}` : transcript));
+        }
+      };
+
+      recognition.onerror = () => {
+        setIsListening(false);
+        setSpeechError('Microphone permission denied or inactive.');
+        setTimeout(() => setSpeechError(null), 3500);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch {
+      setIsListening(false);
+      setSpeechError('Could not start voice recognition.');
+      setTimeout(() => setSpeechError(null), 3500);
+    }
+  };
 
   const toggleChat = () => {
     if (onToggleOpen) {
@@ -612,6 +674,34 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
 
                   <button
                     type="button"
+                    onClick={toggleVoiceInput}
+                    style={{
+                      background: isListening
+                        ? 'rgba(239, 68, 68, 0.2)'
+                        : 'rgba(255, 255, 255, 0.08)',
+                      border: isListening ? '1px solid #ef4444' : '1px solid var(--border-subtle)',
+                      borderRadius: 'var(--radius-sm)',
+                      width: 32,
+                      height: 32,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      cursor: 'pointer',
+                      transition: 'all 0.15s ease',
+                      flexShrink: 0,
+                    }}
+                    aria-label={isListening ? 'Stop voice recognition' : 'Start voice recognition'}
+                    title={isListening ? 'Listening... click to stop' : 'Click to speak to mentor'}
+                  >
+                    {isListening ? (
+                      <MicOff size={15} color="#ef4444" />
+                    ) : (
+                      <Mic size={15} color="#38bdf8" />
+                    )}
+                  </button>
+
+                  <button
+                    type="button"
                     onClick={() => handleSendMessage()}
                     disabled={!inputValue.trim() || isTyping}
                     style={{
@@ -633,6 +723,46 @@ export const ChatAssistant: React.FC<ChatAssistantProps> = ({
                     <Send size={15} color={inputValue.trim() ? '#070a13' : 'rgba(255, 255, 255, 0.4)'} />
                   </button>
                 </div>
+
+                {/* Voice listening pulse / error indicator */}
+                {isListening && (
+                  <div
+                    aria-live="polite"
+                    style={{
+                      marginTop: 6,
+                      fontSize: '0.72rem',
+                      color: '#ef4444',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 6,
+                    }}
+                  >
+                    <span
+                      style={{
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        background: '#ef4444',
+                        boxShadow: '0 0 8px #ef4444',
+                        display: 'inline-block',
+                      }}
+                    />
+                    <span>Listening... speak your question</span>
+                  </div>
+                )}
+
+                {speechError && (
+                  <div
+                    aria-live="polite"
+                    style={{
+                      marginTop: 6,
+                      fontSize: '0.72rem',
+                      color: '#f59e0b',
+                    }}
+                  >
+                    {speechError}
+                  </div>
+                )}
 
                 <div
                   style={{
